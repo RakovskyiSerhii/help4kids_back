@@ -44,3 +44,13 @@ Handler requireGod(Handler handler) {
   });
 }
 
+/// Get current user from JWT payload in context
+/// Returns null if not authenticated
+JwtPayload? getCurrentUser(RequestContext context) {
+  try {
+    return context.read<JwtPayload>();
+  } catch (e) {
+    return null;
+  }
+}
+

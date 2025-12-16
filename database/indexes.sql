@@ -39,6 +39,10 @@ CREATE INDEX idx_services_featured ON services(featured);
 CREATE INDEX idx_consultation_appointments_consultation_id ON consultation_appointments(consultation_id);
 CREATE INDEX idx_consultation_appointments_order_id ON consultation_appointments(order_id);
 CREATE INDEX idx_consultation_appointments_datetime ON consultation_appointments(appointment_datetime);
+CREATE INDEX idx_consultation_appointments_processed ON consultation_appointments(processed);
+CREATE INDEX idx_consultation_appointments_processed_by ON consultation_appointments(processed_by);
+CREATE INDEX idx_consultation_appointments_doctor_id ON consultation_appointments(doctor_id);
+CREATE INDEX idx_consultation_appointments_created_at ON consultation_appointments(created_at);
 
 -- Activity logs indexes
 CREATE INDEX idx_activity_logs_user_id ON activity_logs(user_id);

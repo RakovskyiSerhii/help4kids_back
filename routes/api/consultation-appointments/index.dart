@@ -10,10 +10,58 @@ Future<Response> onRequest(RequestContext context) async {
   final handler = requireAdmin((context) async {
     if (context.request.method == HttpMethod.get) {
       try {
-        // GET /api/consultation-appointments: List all appointments
-        final appointments = await ConsultationAppointmentService.getAllAppointments();
+        // GET /api/consultation-appointments: List appointments for dashboard with optional filters
+        final query = context.request.uri.queryParameters;
+
+        final userId = query['userId'];
+        final doctorId = query['doctorId'];
+        final fromStr = query['from'];
+        final toStr = query['to'];
+        final processedStr = query['processed'];
+
+        DateTime? from;
+        DateTime? to;
+        bool? processed;
+
+        if (fromStr != null && fromStr.isNotEmpty) {
+          from = DateTime.tryParse(fromStr);
+          if (from == null) {
+            return ResponseHelpers.error(
+              ApiErrors.validationError('Invalid "from" date format. Use ISO 8601.'),
+            );
+          }
+        }
+
+        if (toStr != null && toStr.isNotEmpty) {
+          to = DateTime.tryParse(toStr);
+          if (to == null) {
+            return ResponseHelpers.error(
+              ApiErrors.validationError('Invalid "to" date format. Use ISO 8601.'),
+            );
+          }
+        }
+
+        if (processedStr != null && processedStr.isNotEmpty) {
+          if (processedStr == 'true' || processedStr == '1') {
+            processed = true;
+          } else if (processedStr == 'false' || processedStr == '0') {
+            processed = false;
+          } else {
+            return ResponseHelpers.error(
+              ApiErrors.validationError('Invalid "processed" value. Use true/false or 1/0.'),
+            );
+          }
+        }
+
+        final appointments = await ConsultationAppointmentService.getAllAppointments(
+          userId: userId,
+          doctorId: doctorId,
+          from: from,
+          to: to,
+          processed: processed,
+        );
         return ResponseHelpers.success(
-          {'appointments': appointments.map((a) => a.toJson()).toList()},
+          {'appointments': appointments},
         );
       } catch (e) {
         return ResponseHelpers.error(

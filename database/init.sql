@@ -132,15 +132,23 @@ CREATE TABLE orders (
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- 9. Consultation Appointments Table
 CREATE TABLE consultation_appointments (
   id VARCHAR(36) PRIMARY KEY,
   consultation_id VARCHAR(36) NOT NULL,
   appointment_datetime TIMESTAMP NOT NULL,
   details TEXT,
   order_id VARCHAR(36) NOT NULL,
+  -- Processing / dashboard fields
+  processed BOOLEAN NOT NULL DEFAULT FALSE,
+  processed_by VARCHAR(36),
+  processed_at TIMESTAMP NULL,
+  doctor_id VARCHAR(36),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (consultation_id) REFERENCES consultations(id),
-  FOREIGN KEY (order_id) REFERENCES orders(id)
+  FOREIGN KEY (order_id) REFERENCES orders(id),
+  FOREIGN KEY (processed_by) REFERENCES users(id),
+  FOREIGN KEY (doctor_id) REFERENCES staff(id)
 );
 
 -- 10. Article Categories Table
