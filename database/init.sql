@@ -242,6 +242,43 @@ VALUES
   ('00000000-0000-0000-0000-000000000002','admin','Administrator with full privileges'),
   ('00000000-0000-0000-0000-000000000003','customer','Regular customer with limited access');
 
+-- Insert initial users (one god, one admin) with simple bcrypt-hashed passwords.
+-- Password for both users: "password"
+INSERT IGNORE INTO users (
+  id,
+  email,
+  password_hash,
+  first_name,
+  last_name,
+  role_id,
+  is_verified,
+  created_at,
+  updated_at
+)
+VALUES
+  (
+    '11111111-1111-1111-1111-111111111111',
+    'god@help4kids.local',
+    '$2b$10$CwTycUXWue0Thq9StjUM0uJ8e3.uV1YxDCEV4VpWw2X2gYdExgktO',
+    'God',
+    'User',
+    '00000000-0000-0000-0000-000000000001', -- god role
+    TRUE,
+    NOW(),
+    NOW()
+  ),
+  (
+    '22222222-2222-2222-2222-222222222222',
+    'admin@help4kids.local',
+    '$2b$10$CwTycUXWue0Thq9StjUM0uJ8e3.uV1YxDCEV4VpWw2X2gYdExgktO',
+    'Admin',
+    'User',
+    '00000000-0000-0000-0000-000000000002', -- admin role
+    TRUE,
+    NOW(),
+    NOW()
+  );
+
 -- Insert Unit
 INSERT INTO unit (
   id,

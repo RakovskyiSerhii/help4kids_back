@@ -26,8 +26,8 @@ class JwtPayload {
 /// Middleware to verify JWT token from Authorization header
 Handler authMiddleware(Handler handler) {
   return (context) async {
-    // Skip auth for public endpoints
-    final path = context.request.url.path;
+    // Normalize path and skip auth for public endpoints
+    final path = '/${context.request.url.path}';
     final publicPaths = [
       '/api/auth/login',
       '/api/auth/register',

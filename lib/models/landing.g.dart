@@ -10,7 +10,7 @@ _$LandingResponseImpl _$$LandingResponseImplFromJson(
         Map<String, dynamic> json) =>
     _$LandingResponseImpl(
       featuredServices: (json['featuredServices'] as List<dynamic>)
-          .map((e) => Service.fromJson(e as Map<String, dynamic>))
+          .map((e) => ServiceCategory.fromJson(e as Map<String, dynamic>))
           .toList(),
       featuredStaff: (json['featuredStaff'] as List<dynamic>)
           .map((e) => Staff.fromJson(e as Map<String, dynamic>))

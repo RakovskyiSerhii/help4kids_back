@@ -48,7 +48,8 @@ Future<Response> onRequest(RequestContext context) async {
         'socialContacts': socialContacts.map((e) => e.toJson()).toList(),
         'financeInfo': financeInfos.map((e) => e.toJson()).toList(),
         'consultations': consultation.map((e) => e.toJson()).toList(),
-        'serviceCategories': serviceCategories.map((e) => e.toJson()).toList(),
+        // Use the key expected by the frontend GeneralInfo.categories field.
+        'categories': serviceCategories.map((e) => e.toJson()).toList(),
       };
 
       return ResponseHelpers.success(response);

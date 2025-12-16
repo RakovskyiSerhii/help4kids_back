@@ -1,8 +1,12 @@
 import 'package:dart_frog/dart_frog.dart';
+import '../lib/middleware/cors_middleware.dart';
 import '../lib/middleware/db_pool_middleware.dart';
 
 Handler middleware(Handler handler) {
-  // Initialize database connection pool
-  return handler.use(dbPoolMiddleware);
+  return handler
+      // CORS for browser / cross-origin calls.
+      .use(corsMiddleware)
+      // Initialize database connection pool.
+      .use(dbPoolMiddleware);
 }
 

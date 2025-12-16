@@ -20,7 +20,8 @@ LandingResponse _$LandingResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$LandingResponse {
-  List<Service> get featuredServices => throw _privateConstructorUsedError;
+  List<ServiceCategory> get featuredServices =>
+      throw _privateConstructorUsedError;
   List<Staff> get featuredStaff => throw _privateConstructorUsedError;
   List<Consultation> get featuredConsultations =>
       throw _privateConstructorUsedError;
@@ -43,7 +44,7 @@ abstract class $LandingResponseCopyWith<$Res> {
       _$LandingResponseCopyWithImpl<$Res, LandingResponse>;
   @useResult
   $Res call(
-      {List<Service> featuredServices,
+      {List<ServiceCategory> featuredServices,
       List<Staff> featuredStaff,
       List<Consultation> featuredConsultations,
       List<Article> featuredArticles});
@@ -73,7 +74,7 @@ class _$LandingResponseCopyWithImpl<$Res, $Val extends LandingResponse>
       featuredServices: null == featuredServices
           ? _value.featuredServices
           : featuredServices // ignore: cast_nullable_to_non_nullable
-              as List<Service>,
+              as List<ServiceCategory>,
       featuredStaff: null == featuredStaff
           ? _value.featuredStaff
           : featuredStaff // ignore: cast_nullable_to_non_nullable
@@ -99,7 +100,7 @@ abstract class _$$LandingResponseImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<Service> featuredServices,
+      {List<ServiceCategory> featuredServices,
       List<Staff> featuredStaff,
       List<Consultation> featuredConsultations,
       List<Article> featuredArticles});
@@ -127,7 +128,7 @@ class __$$LandingResponseImplCopyWithImpl<$Res>
       featuredServices: null == featuredServices
           ? _value._featuredServices
           : featuredServices // ignore: cast_nullable_to_non_nullable
-              as List<Service>,
+              as List<ServiceCategory>,
       featuredStaff: null == featuredStaff
           ? _value._featuredStaff
           : featuredStaff // ignore: cast_nullable_to_non_nullable
@@ -148,7 +149,7 @@ class __$$LandingResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LandingResponseImpl implements _LandingResponse {
   const _$LandingResponseImpl(
-      {required final List<Service> featuredServices,
+      {required final List<ServiceCategory> featuredServices,
       required final List<Staff> featuredStaff,
       required final List<Consultation> featuredConsultations,
       required final List<Article> featuredArticles})
@@ -160,9 +161,9 @@ class _$LandingResponseImpl implements _LandingResponse {
   factory _$LandingResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$LandingResponseImplFromJson(json);
 
-  final List<Service> _featuredServices;
+  final List<ServiceCategory> _featuredServices;
   @override
-  List<Service> get featuredServices {
+  List<ServiceCategory> get featuredServices {
     if (_featuredServices is EqualUnmodifiableListView)
       return _featuredServices;
     // ignore: implicit_dynamic_type
@@ -243,7 +244,7 @@ class _$LandingResponseImpl implements _LandingResponse {
 
 abstract class _LandingResponse implements LandingResponse {
   const factory _LandingResponse(
-      {required final List<Service> featuredServices,
+      {required final List<ServiceCategory> featuredServices,
       required final List<Staff> featuredStaff,
       required final List<Consultation> featuredConsultations,
       required final List<Article> featuredArticles}) = _$LandingResponseImpl;
@@ -252,7 +253,7 @@ abstract class _LandingResponse implements LandingResponse {
       _$LandingResponseImpl.fromJson;
 
   @override
-  List<Service> get featuredServices;
+  List<ServiceCategory> get featuredServices;
   @override
   List<Staff> get featuredStaff;
   @override

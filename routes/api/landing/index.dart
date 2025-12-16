@@ -7,7 +7,8 @@ Future<Response> onRequest(RequestContext context) async {
   if (context.request.method == HttpMethod.get) {
     try {
       final landing = await LandingService.getFeaturedContent();
-      return ResponseHelpers.success(landing);
+      // Ensure we return JSON-serializable data to the client.
+      return ResponseHelpers.success(landing.toJson());
     } catch (e) {
       return ResponseHelpers.error(
         ApiErrors.internalError('Failed to fetch landing data'),

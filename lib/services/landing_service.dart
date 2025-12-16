@@ -1,3 +1,4 @@
+import 'package:help4kids/models/landing.dart';
 import 'package:help4kids/models/service_category.dart';
 import '../models/article.dart';
 import '../models/consultation.dart';
@@ -5,7 +6,7 @@ import '../models/staff.dart';
 import '../utils/db_helper.dart';
 
 class LandingService {
-  static Future<Map<String, dynamic>> getFeaturedContent() async {
+  static Future<LandingResponse> getFeaturedContent() async {
     return await DbHelper.withConnection((conn) async {
       // Execute all queries in parallel for better performance
       final results = await Future.wait([
@@ -41,34 +42,27 @@ class LandingService {
         );
       }).toList();
 
-      final featuredConsultations = consultations.map((row) {
-        return Consultation(
-          id: row['id'].toString(),
-          title: row['title'].toString(),
-          shortDescription: row['short_description']?.toString() ?? '',
-          price: double.tryParse(row['price']?.toString() ?? '0') ?? 0,
-          createdAt: DateTime.parse(row['created_at'].toString()),
-          updatedAt: DateTime.parse(row['updated_at'].toString()),
-        );
-      }).toList();
+      final featuredConsultations = consultations
+          .map((row) => Consultation.fromMap(row.fields))
+          .toList();
 
-      final featuredArticles = articles.map((row) {
-        return Article(
-          id: row['id'].toString(),
-          title: row['title'].toString(),
-          content: row['content'].toString(),
-          categoryId: row['category_id'].toString(),
-          createdAt: DateTime.parse(row['created_at'].toString()),
-          updatedAt: DateTime.parse(row['updated_at'].toString()),
-        );
-      }).toList();
+      final featuredArticles = articles
+          .map((row) => Article(
+                id: row['id'].toString(),
+                title: row['title'].toString(),
+                content: row['content'].toString(),
+                categoryId: row['category_id'].toString(),
+                createdAt: DateTime.parse(row['created_at'].toString()),
+                updatedAt: DateTime.parse(row['updated_at'].toString()),
+              ))
+          .toList();
 
-      return {
-        'featuredServices': featuredServices,
-        'featuredStaff': featuredStaff,
-        'featuredConsultations': featuredConsultations,
-        'featuredArticles': featuredArticles,
-      };
+      return LandingResponse(
+        featuredServices: featuredServices,
+        featuredStaff: featuredStaff,
+        featuredConsultations: featuredConsultations,
+        featuredArticles: featuredArticles,
+      );
     });
   }
 }

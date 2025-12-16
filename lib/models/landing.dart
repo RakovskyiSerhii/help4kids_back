@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:help4kids/models/article.dart';
 import 'package:help4kids/models/consultation.dart';
-import 'package:help4kids/models/service.dart';
+import 'package:help4kids/models/service_category.dart';
 import 'package:help4kids/models/staff.dart';
 
 part 'landing.freezed.dart';
@@ -10,7 +10,7 @@ part 'landing.g.dart';
 @freezed
 class LandingResponse with _$LandingResponse {
   const factory LandingResponse({
-    required List<Service> featuredServices,
+    required List<ServiceCategory> featuredServices,
     required List<Staff> featuredStaff,
     required List<Consultation> featuredConsultations,
     required List<Article> featuredArticles,

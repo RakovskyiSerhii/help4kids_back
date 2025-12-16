@@ -12,8 +12,9 @@ Future<Response> onRequest(RequestContext context) async {
   if (context.request.method == HttpMethod.get) {
     try {
       final services = await ServiceService.getAllServices();
-      return ResponseHelpers.success(
-        {'services': services.map((s) => s.toJson()).toList()},
+      // Frontend Retrofit client expects a top-level JSON array of services.
+      return Response.json(
+        body: services.map((s) => s.toJson()).toList(),
       );
     } catch (e) {
       return ResponseHelpers.error(
