@@ -1,11 +1,26 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:help4kids/services/course_service.dart';
+import 'package:help4kids/middleware/auth_middleware.dart';
+import 'package:help4kids/utils/errors.dart';
+import 'package:help4kids/utils/response_helpers.dart';
 
 Future<Response> onRequest(RequestContext context) async {
-  // In production, obtain the authenticated user's ID from the context/middleware.
-  final userId = context.request.headers['x-user-id'] ?? 'simulated-user-id';
-  final courses = await CourseService.getPurchasedCourses(userId);
-  return Response.json(
-    body: {'courses': courses.map((c) => c.toJson()).toList()},
-  );
+  // Apply auth middleware
+  final handler = authMiddleware((context) async {
+    try {
+      // Get authenticated user's ID from JWT
+      final payload = context.read<JwtPayload>();
+      final userId = payload.id;
+      final courses = await CourseService.getPurchasedCourses(userId);
+      return ResponseHelpers.success(
+        {'courses': courses.map((c) => c.toJson()).toList()},
+      );
+    } catch (e) {
+      return ResponseHelpers.error(
+        ApiErrors.internalError('Failed to fetch purchased courses'),
+      );
+    }
+  });
+
+  return handler(context);
 }

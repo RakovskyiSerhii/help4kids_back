@@ -23,6 +23,7 @@ mixin _$ServiceCategory {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+  String? get iconUrl => throw _privateConstructorUsedError;
 
   /// Serializes this ServiceCategory to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +41,7 @@ abstract class $ServiceCategoryCopyWith<$Res> {
           ServiceCategory value, $Res Function(ServiceCategory) then) =
       _$ServiceCategoryCopyWithImpl<$Res, ServiceCategory>;
   @useResult
-  $Res call({String id, String name, String? description});
+  $Res call({String id, String name, String? description, String? iconUrl});
 }
 
 /// @nodoc
@@ -61,6 +62,7 @@ class _$ServiceCategoryCopyWithImpl<$Res, $Val extends ServiceCategory>
     Object? id = null,
     Object? name = null,
     Object? description = freezed,
+    Object? iconUrl = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -75,6 +77,10 @@ class _$ServiceCategoryCopyWithImpl<$Res, $Val extends ServiceCategory>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      iconUrl: freezed == iconUrl
+          ? _value.iconUrl
+          : iconUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -87,7 +93,7 @@ abstract class _$$ServiceCategoryImplCopyWith<$Res>
       __$$ServiceCategoryImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, String? description});
+  $Res call({String id, String name, String? description, String? iconUrl});
 }
 
 /// @nodoc
@@ -106,6 +112,7 @@ class __$$ServiceCategoryImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? description = freezed,
+    Object? iconUrl = freezed,
   }) {
     return _then(_$ServiceCategoryImpl(
       id: null == id
@@ -120,6 +127,10 @@ class __$$ServiceCategoryImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      iconUrl: freezed == iconUrl
+          ? _value.iconUrl
+          : iconUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -128,7 +139,7 @@ class __$$ServiceCategoryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ServiceCategoryImpl implements _ServiceCategory {
   const _$ServiceCategoryImpl(
-      {required this.id, required this.name, this.description});
+      {required this.id, required this.name, this.description, this.iconUrl});
 
   factory _$ServiceCategoryImpl.fromJson(Map<String, dynamic> json) =>
       _$$ServiceCategoryImplFromJson(json);
@@ -139,10 +150,12 @@ class _$ServiceCategoryImpl implements _ServiceCategory {
   final String name;
   @override
   final String? description;
+  @override
+  final String? iconUrl;
 
   @override
   String toString() {
-    return 'ServiceCategory(id: $id, name: $name, description: $description)';
+    return 'ServiceCategory(id: $id, name: $name, description: $description, iconUrl: $iconUrl)';
   }
 
   @override
@@ -153,12 +166,13 @@ class _$ServiceCategoryImpl implements _ServiceCategory {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            (identical(other.iconUrl, iconUrl) || other.iconUrl == iconUrl));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, description);
+  int get hashCode => Object.hash(runtimeType, id, name, description, iconUrl);
 
   /// Create a copy of ServiceCategory
   /// with the given fields replaced by the non-null parameter values.
@@ -181,7 +195,8 @@ abstract class _ServiceCategory implements ServiceCategory {
   const factory _ServiceCategory(
       {required final String id,
       required final String name,
-      final String? description}) = _$ServiceCategoryImpl;
+      final String? description,
+      final String? iconUrl}) = _$ServiceCategoryImpl;
 
   factory _ServiceCategory.fromJson(Map<String, dynamic> json) =
       _$ServiceCategoryImpl.fromJson;
@@ -192,6 +207,8 @@ abstract class _ServiceCategory implements ServiceCategory {
   String get name;
   @override
   String? get description;
+  @override
+  String? get iconUrl;
 
   /// Create a copy of ServiceCategory
   /// with the given fields replaced by the non-null parameter values.

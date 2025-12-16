@@ -34,7 +34,8 @@ class CourseService {
     final conn = await MySQLConnection.openConnection();
     try {
       final results = await conn.query(
-        "SELECT * FROM courses WHERE id = '$courseId'",
+        'SELECT * FROM courses WHERE id = ?',
+        [courseId],
       );
       if (results.isEmpty) return null;
       final fields = results.first.fields;
@@ -75,8 +76,9 @@ class CourseService {
         '''
         INSERT INTO courses 
           (id, title, short_description, long_description, image, icon, price, duration, content_url, created_at, updated_at)
-        VALUES ('$courseId', '$title', '$shortDescription', '$longDescription', '$image', '$icon', $price, $duration, '$contentUrl', NOW(), NOW())
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ''',
+        [courseId, title, shortDescription, longDescription, image, icon, price, duration, contentUrl],
       );
       return Course(
         id: courseId,
@@ -101,36 +103,47 @@ class CourseService {
   static Future<bool> updateCourse(String courseId, Map<String, dynamic> body) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final fields = <String>[];
+      final updates = <String>[];
+      final params = <Object?>[];
 
       if (body.containsKey('title')) {
-        fields.add("title = '${body['title']}'");
+        updates.add('title = ?');
+        params.add(body['title']);
       }
       if (body.containsKey('shortDescription')) {
-        fields.add("short_description = '${body['shortDescription']}'");
+        updates.add('short_description = ?');
+        params.add(body['shortDescription']);
       }
       if (body.containsKey('longDescription')) {
-        fields.add("long_description = '${body['longDescription']}'");
+        updates.add('long_description = ?');
+        params.add(body['longDescription']);
       }
       if (body.containsKey('image')) {
-        fields.add("image = '${body['image']}'");
+        updates.add('image = ?');
+        params.add(body['image']);
       }
       if (body.containsKey('icon')) {
-        fields.add("icon = '${body['icon']}'");
+        updates.add('icon = ?');
+        params.add(body['icon']);
       }
       if (body.containsKey('price')) {
-        fields.add("price = ${body['price']}");
+        updates.add('price = ?');
+        params.add(body['price']);
       }
       if (body.containsKey('duration')) {
-        fields.add("duration = ${body['duration']}");
+        updates.add('duration = ?');
+        params.add(body['duration']);
       }
       if (body.containsKey('contentUrl')) {
-        fields.add("content_url = '${body['contentUrl']}'");
+        updates.add('content_url = ?');
+        params.add(body['contentUrl']);
       }
 
-      if (fields.isEmpty) return false;
-      final query = "UPDATE courses SET ${fields.join(", ")}, updated_at = NOW() WHERE id = '$courseId'";
-      final result = await conn.query(query);
+      if (updates.isEmpty) return false;
+      updates.add('updated_at = NOW()');
+      params.add(courseId); // For WHERE clause
+      final query = 'UPDATE courses SET ${updates.join(", ")} WHERE id = ?';
+      final result = await conn.query(query, params);
       return result.affectedRows! > 0;
     } finally {
       await conn.close();
@@ -141,7 +154,8 @@ class CourseService {
     final conn = await MySQLConnection.openConnection();
     try {
       final result = await conn.query(
-        "DELETE FROM courses WHERE id = '$courseId'",
+        'DELETE FROM courses WHERE id = ?',
+        [courseId],
       );
       return result.affectedRows! > 0;
     } finally {
@@ -156,8 +170,9 @@ class CourseService {
         '''
         SELECT c.* FROM courses c
         JOIN orders o ON c.id = o.service_id
-        WHERE o.user_id = '$userId' AND o.service_type = 'course' AND o.status = 'paid'
+        WHERE o.user_id = ? AND o.service_type = 'course' AND o.status = 'paid'
         ''',
+        [userId],
       );
       return results.map((row) {
         final fields = row.fields;

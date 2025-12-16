@@ -32,8 +32,10 @@ class ArticleService {
   static Future<Article?> getArticleById(String articleId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      // Using string interpolation for the query.
-      final results = await conn.query("SELECT * FROM articles WHERE id = '$articleId'");
+      final results = await conn.query(
+        'SELECT * FROM articles WHERE id = ?',
+        [articleId],
+      );
       if (results.isEmpty) return null;
       final fields = results.first.fields;
       return Article(
@@ -62,11 +64,9 @@ class ArticleService {
     final conn = await MySQLConnection.openConnection();
     try {
       final articleId = Uuid().v4();
-      // For a nullable longDescription, insert SQL NULL if null; otherwise, wrap in quotes.
-      final descValue = longDescription == null ? "NULL" : "'$longDescription'";
       await conn.query(
-          "INSERT INTO articles (id, title, content, category_id, long_description, created_at, updated_at) "
-              "VALUES ('$articleId', '$title', '$content', '$categoryId', $descValue, NOW(), NOW())"
+        'INSERT INTO articles (id, title, content, category_id, long_description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())',
+        [articleId, title, content, categoryId, longDescription],
       );
       return Article(
         id: articleId,
@@ -89,24 +89,30 @@ class ArticleService {
     final conn = await MySQLConnection.openConnection();
     try {
       final updates = <String>[];
+      final params = <Object?>[];
 
       if (body.containsKey('title')) {
-        updates.add("title = '${body['title']}'");
+        updates.add('title = ?');
+        params.add(body['title']);
       }
       if (body.containsKey('content')) {
-        updates.add("content = '${body['content']}'");
+        updates.add('content = ?');
+        params.add(body['content']);
       }
       if (body.containsKey('longDescription')) {
-        final desc = body['longDescription'] == null ? "NULL" : "'${body['longDescription']}'";
-        updates.add("long_description = $desc");
+        updates.add('long_description = ?');
+        params.add(body['longDescription']);
       }
       if (body.containsKey('categoryId')) {
-        updates.add("category_id = '${body['categoryId']}'");
+        updates.add('category_id = ?');
+        params.add(body['categoryId']);
       }
       if (updates.isEmpty) return false;
 
-      final query = "UPDATE articles SET ${updates.join(', ')}, updated_at = NOW() WHERE id = '$articleId'";
-      final result = await conn.query(query);
+      updates.add('updated_at = NOW()');
+      params.add(articleId); // For WHERE clause
+      final query = 'UPDATE articles SET ${updates.join(", ")} WHERE id = ?';
+      final result = await conn.query(query, params);
       return result.affectedRows != null && result.affectedRows! > 0;
     } finally {
       await conn.close();
@@ -117,7 +123,10 @@ class ArticleService {
   static Future<bool> deleteArticle(String articleId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final result = await conn.query("DELETE FROM articles WHERE id = '$articleId'");
+      final result = await conn.query(
+        'DELETE FROM articles WHERE id = ?',
+        [articleId],
+      );
       return result.affectedRows != null && result.affectedRows! > 0;
     } finally {
       await conn.close();
@@ -131,7 +140,8 @@ class ArticleService {
     try {
       final saveId = Uuid().v4();
       final result = await conn.query(
-          "INSERT INTO saved_articles (id, user_id, article_id, saved_at) VALUES ('$saveId', '$userId', '$articleId', NOW())"
+        'INSERT INTO saved_articles (id, user_id, article_id, saved_at) VALUES (?, ?, ?, NOW())',
+        [saveId, userId, articleId],
       );
       return result.affectedRows != null && result.affectedRows! > 0;
     } catch (e) {

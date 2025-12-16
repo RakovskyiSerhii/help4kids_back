@@ -20,7 +20,7 @@ class UserService {
           updatedAt: DateTime.parse(fields['updated_at'].toString()),
           createdBy: fields['created_by']?.toString(),
           updatedBy: fields['updated_by']?.toString(),
-          isVerified: bool.tryParse(fields['is_verified'].toString()) ?? false,
+          isVerified: _parseBool(fields['is_verified']),
         );
       }).toList();
     } finally {
@@ -32,8 +32,10 @@ class UserService {
   static Future<User?> getUserById(String userId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final results =
-          await conn.query("SELECT * FROM users WHERE id = '$userId'");
+      final results = await conn.query(
+        'SELECT * FROM users WHERE id = ?',
+        [userId],
+      );
       if (results.isEmpty) return null;
       final fields = results.first.fields;
       return User(
@@ -47,11 +49,21 @@ class UserService {
         updatedAt: DateTime.parse(fields['updated_at'].toString()),
         createdBy: fields['created_by']?.toString(),
         updatedBy: fields['updated_by']?.toString(),
-        isVerified: bool.tryParse(fields['is_verified'].toString()) ?? false,
+        isVerified: _parseBool(fields['is_verified']),
       );
     } finally {
       await conn.close();
     }
+  }
+
+  // Helper to parse boolean from various types
+  static bool _parseBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is int) return value == 1;
+    if (value is String) {
+      return value.toLowerCase() == 'true' || value == '1';
+    }
+    return false;
   }
 
   // Update a user with dynamic fields
@@ -59,26 +71,33 @@ class UserService {
       String userId, Map<String, dynamic> body) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final fields = <String>[];
+      final updates = <String>[];
+      final params = <Object?>[];
 
       if (body.containsKey('email')) {
-        fields.add("email = '${body['email']}'");
+        updates.add('email = ?');
+        params.add(body['email']);
       }
       if (body.containsKey('firstName')) {
-        fields.add("first_name = '${body['firstName']}'");
+        updates.add('first_name = ?');
+        params.add(body['firstName']);
       }
       if (body.containsKey('lastName')) {
-        fields.add("last_name = '${body['lastName']}'");
+        updates.add('last_name = ?');
+        params.add(body['lastName']);
       }
       if (body.containsKey('roleId')) {
-        fields.add("role_id = '${body['roleId']}'");
+        updates.add('role_id = ?');
+        params.add(body['roleId']);
       }
 
-      if (fields.isEmpty) return false;
+      if (updates.isEmpty) return false;
 
-      final query =
-          "UPDATE users SET ${fields.join(", ")}, updated_at = NOW() WHERE id = '$userId'";
-      final result = await conn.query(query);
+      updates.add('updated_at = NOW()');
+      params.add(userId); // For WHERE clause
+
+      final query = 'UPDATE users SET ${updates.join(", ")} WHERE id = ?';
+      final result = await conn.query(query, params);
       return result.affectedRows! > 0;
     } finally {
       await conn.close();
@@ -89,7 +108,10 @@ class UserService {
   static Future<bool> deleteUser(String userId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final result = await conn.query("DELETE FROM users WHERE id = '$userId'");
+      final result = await conn.query(
+        'DELETE FROM users WHERE id = ?',
+        [userId],
+      );
       return result.affectedRows! > 0;
     } finally {
       await conn.close();

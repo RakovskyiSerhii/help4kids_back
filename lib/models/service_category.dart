@@ -9,6 +9,7 @@ class ServiceCategory with _$ServiceCategory {
     required String id,
     required String name,
     String? description,
+    String? iconUrl, // New field for the icon URL
   }) = _ServiceCategory;
 
   factory ServiceCategory.fromJson(Map<String, dynamic> json) =>

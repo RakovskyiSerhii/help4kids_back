@@ -26,7 +26,7 @@ mixin _$Service {
   String? get longDescription => throw _privateConstructorUsedError;
   String? get image => throw _privateConstructorUsedError;
   String get icon => throw _privateConstructorUsedError;
-  double get price => throw _privateConstructorUsedError;
+  ServicePrice get price => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
   String get categoryId => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -55,13 +55,15 @@ abstract class $ServiceCopyWith<$Res> {
       String? longDescription,
       String? image,
       String icon,
-      double price,
+      ServicePrice price,
       int? duration,
       String categoryId,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
       String? updatedBy});
+
+  $ServicePriceCopyWith<$Res> get price;
 }
 
 /// @nodoc
@@ -121,7 +123,7 @@ class _$ServiceCopyWithImpl<$Res, $Val extends Service>
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
-              as double,
+              as ServicePrice,
       duration: freezed == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
@@ -148,6 +150,16 @@ class _$ServiceCopyWithImpl<$Res, $Val extends Service>
               as String?,
     ) as $Val);
   }
+
+  /// Create a copy of Service
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ServicePriceCopyWith<$Res> get price {
+    return $ServicePriceCopyWith<$Res>(_value.price, (value) {
+      return _then(_value.copyWith(price: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -164,13 +176,16 @@ abstract class _$$ServiceImplCopyWith<$Res> implements $ServiceCopyWith<$Res> {
       String? longDescription,
       String? image,
       String icon,
-      double price,
+      ServicePrice price,
       int? duration,
       String categoryId,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
       String? updatedBy});
+
+  @override
+  $ServicePriceCopyWith<$Res> get price;
 }
 
 /// @nodoc
@@ -228,7 +243,7 @@ class __$$ServiceImplCopyWithImpl<$Res>
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
-              as double,
+              as ServicePrice,
       duration: freezed == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
@@ -291,7 +306,7 @@ class _$ServiceImpl implements _Service {
   @override
   final String icon;
   @override
-  final double price;
+  final ServicePrice price;
   @override
   final int? duration;
   @override
@@ -380,7 +395,7 @@ abstract class _Service implements Service {
       final String? longDescription,
       final String? image,
       required final String icon,
-      required final double price,
+      required final ServicePrice price,
       final int? duration,
       required final String categoryId,
       required final DateTime createdAt,
@@ -403,7 +418,7 @@ abstract class _Service implements Service {
   @override
   String get icon;
   @override
-  double get price;
+  ServicePrice get price;
   @override
   int? get duration;
   @override

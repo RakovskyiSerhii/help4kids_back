@@ -30,7 +30,10 @@ class ConsultationService {
   static Future<Consultation?> getConsultationById(String consultationId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final results = await conn.query("SELECT * FROM consultations WHERE id = '$consultationId'");
+      final results = await conn.query(
+        'SELECT * FROM consultations WHERE id = ?',
+        [consultationId],
+      );
       if (results.isEmpty) return null;
       final fields = results.first.fields;
       return Consultation(
@@ -57,9 +60,9 @@ class ConsultationService {
     final conn = await MySQLConnection.openConnection();
     try {
       final consultationId = Uuid().v4();
-      // Note: Numeric fields (price) are not wrapped in quotes.
       await conn.query(
-          "INSERT INTO consultations (id, title, short_description, price, created_at, updated_at) VALUES ('$consultationId', '$title', '$shortDescription', $price, NOW(), NOW())"
+        'INSERT INTO consultations (id, title, short_description, price, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())',
+        [consultationId, title, shortDescription, price],
       );
       return Consultation(
         id: consultationId,
@@ -81,20 +84,26 @@ class ConsultationService {
     final conn = await MySQLConnection.openConnection();
     try {
       final updates = <String>[];
+      final params = <Object?>[];
 
       if (body.containsKey('title')) {
-        updates.add("title = '${body['title']}'");
+        updates.add('title = ?');
+        params.add(body['title']);
       }
       if (body.containsKey('shortDescription')) {
-        updates.add("short_description = '${body['shortDescription']}'");
+        updates.add('short_description = ?');
+        params.add(body['shortDescription']);
       }
       if (body.containsKey('price')) {
-        updates.add("price = ${body['price']}");
+        updates.add('price = ?');
+        params.add(body['price']);
       }
 
       if (updates.isEmpty) return false;
-      final query = "UPDATE consultations SET ${updates.join(', ')}, updated_at = NOW() WHERE id = '$consultationId'";
-      final result = await conn.query(query);
+      updates.add('updated_at = NOW()');
+      params.add(consultationId); // For WHERE clause
+      final query = 'UPDATE consultations SET ${updates.join(", ")} WHERE id = ?';
+      final result = await conn.query(query, params);
       return result.affectedRows != null && result.affectedRows! > 0;
     } finally {
       await conn.close();
@@ -105,7 +114,10 @@ class ConsultationService {
   static Future<bool> deleteConsultation(String consultationId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final result = await conn.query("DELETE FROM consultations WHERE id = '$consultationId'");
+      final result = await conn.query(
+        'DELETE FROM consultations WHERE id = ?',
+        [consultationId],
+      );
       return result.affectedRows != null && result.affectedRows! > 0;
     } finally {
       await conn.close();
@@ -117,7 +129,8 @@ class ConsultationService {
     final conn = await MySQLConnection.openConnection();
     try {
       final results = await conn.query(
-          "SELECT c.* FROM consultations c JOIN orders o ON c.id = o.service_id WHERE o.user_id = '$userId' AND o.service_type = 'consultation' AND o.status = 'paid'"
+        "SELECT c.* FROM consultations c JOIN orders o ON c.id = o.service_id WHERE o.user_id = ? AND o.service_type = 'consultation' AND o.status = 'paid'",
+        [userId],
       );
       return results.map((row) {
         final fields = row.fields;

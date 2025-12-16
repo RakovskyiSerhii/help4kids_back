@@ -18,4 +18,17 @@ class Consultation with _$Consultation {
 
   factory Consultation.fromJson(Map<String, dynamic> json) =>
       _$ConsultationFromJson(json);
+
+  factory Consultation.fromMap(Map<String, dynamic> map) {
+    return Consultation(
+      id: map['id']?.toString() ?? '',
+      title: map['title']?.toString() ?? '',
+      shortDescription: map['short_description']?.toString() ?? '',
+      price: double.tryParse(map['price']?.toString() ?? '0') ?? 0,
+      createdAt: DateTime.parse(map['created_at'].toString()),
+      updatedAt: DateTime.parse(map['updated_at'].toString()),
+      createdBy: map['created_by']?.toString(),
+      updatedBy: map['updated_by']?.toString(),
+    );
+  }
 }

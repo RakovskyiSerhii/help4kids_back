@@ -18,8 +18,9 @@ class OrderService {
         INSERT INTO orders 
           (id, user_id, order_reference, service_type, service_id, amount, status, purchase_date, created_at, updated_at)
         VALUES 
-          ('$orderId', '$userId', '$orderReference', '${serviceType.name}', '$serviceId', $amount, 'pending', NOW(), NOW(), NOW())
+          (?, ?, ?, ?, ?, ?, 'pending', NOW(), NOW(), NOW())
         ''',
+        [orderId, userId, orderReference, serviceType.name, serviceId, amount],
       );
 
       return Order(
@@ -43,7 +44,8 @@ class OrderService {
     final conn = await MySQLConnection.openConnection();
     try {
       final results = await conn.query(
-        "SELECT * FROM orders WHERE user_id = '$userId'",
+        'SELECT * FROM orders WHERE user_id = ?',
+        [userId],
       );
       return results.map((row) {
         final fields = row.fields;
@@ -69,7 +71,8 @@ class OrderService {
     final conn = await MySQLConnection.openConnection();
     try {
       final results = await conn.query(
-        "SELECT * FROM orders WHERE id = '$orderId'",
+        'SELECT * FROM orders WHERE id = ?',
+        [orderId],
       );
       if (results.isEmpty) return null;
       final fields = results.first.fields;
@@ -98,7 +101,8 @@ class OrderService {
     final conn = await MySQLConnection.openConnection();
     try {
       final result = await conn.query(
-        "UPDATE orders SET status = '$paymentStatus' WHERE order_reference = '$orderReference'",
+        'UPDATE orders SET status = ? WHERE order_reference = ?',
+        [paymentStatus, orderReference],
       );
       return result.affectedRows! > 0;
     } finally {
@@ -110,7 +114,8 @@ class OrderService {
     final conn = await MySQLConnection.openConnection();
     try {
       final result = await conn.query(
-        "UPDATE orders SET status = 'paid' WHERE order_reference = '$orderReference'",
+        "UPDATE orders SET status = 'paid' WHERE order_reference = ?",
+        [orderReference],
       );
       return result.affectedRows! > 0;
     } finally {

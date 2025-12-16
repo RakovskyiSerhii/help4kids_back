@@ -1,53 +1,80 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:help4kids/services/user_service.dart';
+import 'package:help4kids/utils/auth_helpers.dart';
+import 'package:help4kids/utils/errors.dart';
+import 'package:help4kids/utils/validation.dart';
+import 'package:help4kids/utils/response_helpers.dart';
 
 Future<Response> onRequest(RequestContext context, String userId) async {
-  // Check that only admin or god can manage users.
-  final role = context.request.headers['x-role'] ?? 'customer';
-  if (role != 'admin' && role != 'god') {
-    return Response.json(
-      body: {'error': 'Unauthorized'},
-      statusCode: 403,
-    );
-  }
-
-  // GET /api/users/{userId}: Retrieve user details.
-  if (context.request.method == HttpMethod.get) {
-    final user = await UserService.getUserById(userId);
-    if (user == null) {
-      return Response.json(
-        body: {'error': 'User not found'},
-        statusCode: 404,
+  // Apply auth middleware and require admin/god role
+  final handler = requireAdmin((context) async {
+    // Validate userId format
+    if (!Validation.isValidUuid(userId)) {
+      return ResponseHelpers.error(
+        ApiErrors.validationError('Invalid user ID format'),
       );
     }
-    return Response.json(body: user.toJson());
-  }
 
-  // PUT /api/users/{userId}: Update user details.
-  else if (context.request.method == HttpMethod.put) {
-    final body = await context.request.json();
-    final success = await UserService.updateUser(userId, body);
-    if (!success) {
-      return Response.json(
-        body: {'error': 'Update failed'},
-        statusCode: 400,
-      );
+    // GET /api/users/{userId}: Retrieve user details.
+    if (context.request.method == HttpMethod.get) {
+      try {
+        final user = await UserService.getUserById(userId);
+        if (user == null) {
+          return ResponseHelpers.error(ApiErrors.notFound('User'));
+        }
+        final userJson = user.toJson();
+        userJson.remove('passwordHash');
+        return ResponseHelpers.success(userJson);
+      } catch (e) {
+        return ResponseHelpers.error(
+          ApiErrors.internalError('Failed to fetch user'),
+        );
+      }
     }
-    final updatedUser = await UserService.getUserById(userId);
-    return Response.json(body: updatedUser?.toJson() ?? {});
-  }
 
-  // DELETE /api/users/{userId}: Delete the user.
-  else if (context.request.method == HttpMethod.delete) {
-    final success = await UserService.deleteUser(userId);
-    if (!success) {
-      return Response.json(
-        body: {'error': 'Deletion failed'},
-        statusCode: 400,
-      );
+    // PUT /api/users/{userId}: Update user details.
+    else if (context.request.method == HttpMethod.put) {
+      try {
+        final body = await context.request.json() as Map<String, dynamic>;
+        final success = await UserService.updateUser(userId, body);
+        if (!success) {
+          return ResponseHelpers.error(
+            ApiErrors.badRequest('Update failed'),
+          );
+        }
+        final updatedUser = await UserService.getUserById(userId);
+        if (updatedUser == null) {
+          return ResponseHelpers.error(ApiErrors.notFound('User'));
+        }
+        final userJson = updatedUser.toJson();
+        userJson.remove('passwordHash');
+        return ResponseHelpers.success(userJson);
+      } catch (e) {
+        return ResponseHelpers.error(
+          ApiErrors.internalError('Failed to update user'),
+        );
+      }
     }
-    return Response.json(body: {'message': 'User deleted successfully'});
-  }
 
-  return Response(statusCode: 405);
+    // DELETE /api/users/{userId}: Delete the user.
+    else if (context.request.method == HttpMethod.delete) {
+      try {
+        final success = await UserService.deleteUser(userId);
+        if (!success) {
+          return ResponseHelpers.error(
+            ApiErrors.badRequest('Deletion failed'),
+          );
+        }
+        return ResponseHelpers.success({'message': 'User deleted successfully'});
+      } catch (e) {
+        return ResponseHelpers.error(
+          ApiErrors.internalError('Failed to delete user'),
+        );
+      }
+    }
+
+    return ResponseHelpers.methodNotAllowed();
+  });
+
+  return handler(context);
 }

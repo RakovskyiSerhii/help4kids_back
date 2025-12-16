@@ -12,6 +12,7 @@ _$ServiceCategoryImpl _$$ServiceCategoryImplFromJson(
       id: json['id'] as String,
       name: json['name'] as String,
       description: json['description'] as String?,
+      iconUrl: json['iconUrl'] as String?,
     );
 
 Map<String, dynamic> _$$ServiceCategoryImplToJson(
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$ServiceCategoryImplToJson(
       'id': instance.id,
       'name': instance.name,
       'description': instance.description,
+      'iconUrl': instance.iconUrl,
     };
