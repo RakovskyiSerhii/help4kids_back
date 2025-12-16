@@ -1,36 +1,57 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:help4kids/services/auth_service.dart';
+import 'package:help4kids/middleware/auth_middleware.dart';
+import 'package:help4kids/utils/errors.dart';
+import 'package:help4kids/utils/validation.dart';
+import 'package:help4kids/utils/response_helpers.dart';
 
 Future<Response> onRequest(RequestContext context) async {
-  if (context.request.method == HttpMethod.post) {
-    final body = await context.request.json();
-    final currentPassword = body['currentPassword'] as String?;
-    final newPassword = body['newPassword'] as String?;
+  // Apply auth middleware
+  final handler = authMiddleware((context) async {
+    if (context.request.method == HttpMethod.post) {
+      try {
+        final body = await context.request.json() as Map<String, dynamic>;
+        final currentPassword = body['currentPassword'] as String?;
+        final newPassword = body['newPassword'] as String?;
 
-    // In production, the user ID would be extracted from the auth token.
-    final userId = context.request.headers['x-user-id'] ?? 'simulated-user-id';
+        // Get userId from context (set by auth middleware)
+        final payload = context.read<JwtPayload>();
+        final userId = payload.id;
 
-    if (currentPassword == null || newPassword == null) {
-      return Response.json(
-        body: {'error': 'Missing required fields'},
-        statusCode: 400,
-      );
+        if (currentPassword == null || newPassword == null) {
+          return ResponseHelpers.error(
+            ApiErrors.validationError('Missing required fields: currentPassword, newPassword'),
+          );
+        }
+
+        // Validate password strength
+        if (!Validation.isValidPassword(newPassword)) {
+          return ResponseHelpers.error(
+            ApiErrors.validationError('New password must be at least 8 characters long'),
+          );
+        }
+
+        final success = await AuthService.changePassword(
+          userId: userId,
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        );
+
+        if (!success) {
+          return ResponseHelpers.error(
+            ApiErrors.badRequest('Password change failed. Current password may be incorrect.'),
+          );
+        }
+
+        return ResponseHelpers.success({'message': 'Password changed successfully'});
+      } catch (e) {
+        return ResponseHelpers.error(
+          ApiErrors.internalError('Failed to change password'),
+        );
+      }
     }
+    return ResponseHelpers.methodNotAllowed();
+  });
 
-    final success = await AuthService.changePassword(
-      userId: userId,
-      currentPassword: currentPassword,
-      newPassword: newPassword,
-    );
-
-    if (!success) {
-      return Response.json(
-        body: {'error': 'Password change failed. Current password may be incorrect.'},
-        statusCode: 400,
-      );
-    }
-
-    return Response.json(body: {'message': 'Password changed successfully'});
-  }
-  return Response(statusCode: 405);
+  return handler(context);
 }

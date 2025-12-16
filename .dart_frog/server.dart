@@ -8,6 +8,9 @@ import 'package:dart_frog/dart_frog.dart';
 
 import '../routes/api/users/index.dart' as api_users_index;
 import '../routes/api/users/[userId].dart' as api_users_$user_id;
+import '../routes/api/staff/index.dart' as api_staff_index;
+import '../routes/api/staff/create.dart' as api_staff_create;
+import '../routes/api/staff/by/[id].dart' as api_staff_by_$id;
 import '../routes/api/services/index.dart' as api_services_index;
 import '../routes/api/services/[serviceId].dart' as api_services_$service_id;
 import '../routes/api/orders/payment-callback.dart' as api_orders_payment_callback;
@@ -15,6 +18,11 @@ import '../routes/api/orders/me.dart' as api_orders_me;
 import '../routes/api/orders/index.dart' as api_orders_index;
 import '../routes/api/orders/confirm-payment.dart' as api_orders_confirm_payment;
 import '../routes/api/orders/order/[orderId].dart' as api_orders_order_$order_id;
+import '../routes/api/landing/index.dart' as api_landing_index;
+import '../routes/api/general_info/units.dart' as api_general_info_units;
+import '../routes/api/general_info/social_contacts.dart' as api_general_info_social_contacts;
+import '../routes/api/general_info/index.dart' as api_general_info_index;
+import '../routes/api/general_info/finance_info.dart' as api_general_info_finance_info;
 import '../routes/api/courses/me.dart' as api_courses_me;
 import '../routes/api/courses/index.dart' as api_courses_index;
 import '../routes/api/courses/course/[courseId].dart' as api_courses_course_$course_id;
@@ -36,6 +44,8 @@ import '../routes/api/article-categories/index.dart' as api_article_categories_i
 import '../routes/api/article-categories/[categoryId].dart' as api_article_categories_$category_id;
 import '../routes/api/activity-logs/index.dart' as api_activity_logs_index;
 
+import '../routes/_middleware.dart' as middleware;
+import '../routes/api/auth/_middleware.dart' as api_auth_middleware;
 
 void main() async {
   final address = InternetAddress.tryParse('') ?? InternetAddress.anyIPv6;
@@ -49,7 +59,7 @@ Future<HttpServer> createServer(InternetAddress address, int port) {
 }
 
 Handler buildRootHandler() {
-  final pipeline = const Pipeline();
+  final pipeline = const Pipeline().addMiddleware(middleware.middleware);
   final router = Router()
     ..mount('/api/activity-logs', (context) => buildApiActivityLogsHandler()(context))
     ..mount('/api/article-categories', (context) => buildApiArticleCategoriesHandler()(context))
@@ -61,9 +71,13 @@ Handler buildRootHandler() {
     ..mount('/api/consultations', (context) => buildApiConsultationsHandler()(context))
     ..mount('/api/courses/course', (context) => buildApiCoursesCourseHandler()(context))
     ..mount('/api/courses', (context) => buildApiCoursesHandler()(context))
+    ..mount('/api/general_info', (context) => buildApiGeneralInfoHandler()(context))
+    ..mount('/api/landing', (context) => buildApiLandingHandler()(context))
     ..mount('/api/orders/order', (context) => buildApiOrdersOrderHandler()(context))
     ..mount('/api/orders', (context) => buildApiOrdersHandler()(context))
     ..mount('/api/services', (context) => buildApiServicesHandler()(context))
+    ..mount('/api/staff/by', (context) => buildApiStaffByHandler()(context))
+    ..mount('/api/staff', (context) => buildApiStaffHandler()(context))
     ..mount('/api/users', (context) => buildApiUsersHandler()(context));
   return pipeline.addHandler(router);
 }
@@ -97,7 +111,7 @@ Handler buildApiArticlesHandler() {
 }
 
 Handler buildApiAuthHandler() {
-  final pipeline = const Pipeline();
+  final pipeline = const Pipeline().addMiddleware(api_auth_middleware.middleware);
   final router = Router()
     ..all('/verify_email', (context) => api_auth_verify_email.onRequest(context,))..all('/resend_email', (context) => api_auth_resend_email.onRequest(context,))..all('/register', (context) => api_auth_register.onRequest(context,))..all('/me', (context) => api_auth_me.onRequest(context,))..all('/login', (context) => api_auth_login.onRequest(context,))..all('/change-password', (context) => api_auth_change_password.onRequest(context,));
   return pipeline.addHandler(router);
@@ -138,6 +152,20 @@ Handler buildApiCoursesHandler() {
   return pipeline.addHandler(router);
 }
 
+Handler buildApiGeneralInfoHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/units', (context) => api_general_info_units.onRequest(context,))..all('/social_contacts', (context) => api_general_info_social_contacts.onRequest(context,))..all('/', (context) => api_general_info_index.onRequest(context,))..all('/finance_info', (context) => api_general_info_finance_info.onRequest(context,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiLandingHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/', (context) => api_landing_index.onRequest(context,));
+  return pipeline.addHandler(router);
+}
+
 Handler buildApiOrdersOrderHandler() {
   final pipeline = const Pipeline();
   final router = Router()
@@ -156,6 +184,20 @@ Handler buildApiServicesHandler() {
   final pipeline = const Pipeline();
   final router = Router()
     ..all('/', (context) => api_services_index.onRequest(context,))..all('/<serviceId>', (context,serviceId,) => api_services_$service_id.onRequest(context,serviceId,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiStaffByHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/<id>', (context,id,) => api_staff_by_$id.onRequest(context,id,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiStaffHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/', (context) => api_staff_index.onRequest(context,))..all('/create', (context) => api_staff_create.onRequest(context,));
   return pipeline.addHandler(router);
 }
 

@@ -1,16 +1,27 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:help4kids/services/order_service.dart';
+import 'package:help4kids/middleware/auth_middleware.dart';
+import 'package:help4kids/utils/errors.dart';
+import 'package:help4kids/utils/response_helpers.dart';
 
 Future<Response> onRequest(RequestContext context) async {
-  // In a real-world scenario, an authentication middleware would provide the user id.
-  // Here we simulate it using a header or default value.
-  final userId = context.request.headers['x-user-id'] ?? 'simulated-user-id';
+  // Apply auth middleware
+  final handler = authMiddleware((context) async {
+    try {
+      // Get authenticated user's ID from JWT
+      final payload = context.read<JwtPayload>();
+      final userId = payload.id;
+      final orders = await OrderService.getOrdersByUser(userId);
 
-  final orders = await OrderService.getOrdersByUser(userId);
+      return ResponseHelpers.success(
+        {'orders': orders.map((order) => order.toJson()).toList()},
+      );
+    } catch (e) {
+      return ResponseHelpers.error(
+        ApiErrors.internalError('Failed to fetch orders'),
+      );
+    }
+  });
 
-  return Response.json(
-    body: {
-      'orders': orders.map((order) => order.toJson()).toList(),
-    },
-  );
+  return handler(context);
 }

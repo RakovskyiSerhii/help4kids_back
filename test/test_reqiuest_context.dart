@@ -33,21 +33,26 @@ class TestRequestContext implements RequestContext {
   // }
 
   @override
-  T read<T>() {
+  T read<T>([String? name]) {
     // Attempt to retrieve the instance of type T from the properties map.
-    final value = _properties[T];
+    // Support both named and unnamed reads
+    final key = name != null ? '$T:$name' : T;
+    final value = _properties[key] ?? _properties[T];
     if (value is T) return value;
-    throw Exception('No instance of type $T provided');
+    throw Exception('No instance of type $T${name != null ? " with name $name" : ""} provided');
   }
 
   @override
   Map<String, String> get mountedParams => {};
 
   @override
-  RequestContext provide<T extends Object?>(T Function() create) {
-    // Create an instance of T and store it keyed by its type
+  RequestContext provide<T extends Object?>(T Function() create, {String? name}) {
+    // Create an instance of T and store it keyed by its type and optionally by name
     final instance = create();
     _properties[T] = instance;
+    if (name != null) {
+      _properties['$T:$name'] = instance;
+    }
     return copyWith(properties: _properties);
   }
 }

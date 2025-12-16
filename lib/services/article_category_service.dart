@@ -25,7 +25,10 @@ class ArticleCategoryService {
   static Future<ArticleCategory?> getArticleCategoryById(String categoryId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final results = await conn.query("SELECT * FROM article_categories WHERE id = '$categoryId'");
+      final results = await conn.query(
+        'SELECT * FROM article_categories WHERE id = ?',
+        [categoryId],
+      );
       if (results.isEmpty) return null;
       final fields = results.first.fields;
       return ArticleCategory(
@@ -46,10 +49,9 @@ class ArticleCategoryService {
     final conn = await MySQLConnection.openConnection();
     try {
       final categoryId = Uuid().v4();
-      // Use interpolation. For null description, we insert NULL without quotes.
-      final descValue = description == null ? 'NULL' : "'$description'";
       await conn.query(
-          "INSERT INTO article_categories (id, title, description) VALUES ('$categoryId', '$title', $descValue)"
+        'INSERT INTO article_categories (id, title, description) VALUES (?, ?, ?)',
+        [categoryId, title, description],
       );
       return ArticleCategory(
         id: categoryId,
@@ -66,20 +68,22 @@ class ArticleCategoryService {
     final conn = await MySQLConnection.openConnection();
     try {
       final updates = <String>[];
+      final params = <Object?>[];
 
       if (body.containsKey('title')) {
-        final title = body['title'].toString();
-        updates.add("title = '$title'");
+        updates.add('title = ?');
+        params.add(body['title']);
       }
       if (body.containsKey('description')) {
-        final desc = body['description'] != null ? "'${body['description']}'" : 'NULL';
-        updates.add("description = $desc");
+        updates.add('description = ?');
+        params.add(body['description']);
       }
 
       if (updates.isEmpty) return false;
 
-      final query = "UPDATE article_categories SET ${updates.join(', ')} WHERE id = '$categoryId'";
-      final result = await conn.query(query);
+      params.add(categoryId); // For WHERE clause
+      final query = 'UPDATE article_categories SET ${updates.join(", ")} WHERE id = ?';
+      final result = await conn.query(query, params);
       return result.affectedRows != null && result.affectedRows! > 0;
     } finally {
       await conn.close();
@@ -90,7 +94,10 @@ class ArticleCategoryService {
   static Future<bool> deleteArticleCategory(String categoryId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final result = await conn.query("DELETE FROM article_categories WHERE id = '$categoryId'");
+      final result = await conn.query(
+        'DELETE FROM article_categories WHERE id = ?',
+        [categoryId],
+      );
       return result.affectedRows != null && result.affectedRows! > 0;
     } finally {
       await conn.close();

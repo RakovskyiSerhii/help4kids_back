@@ -27,7 +27,10 @@ class ConsultationAppointmentService {
   static Future<ConsultationAppointment?> getAppointmentById(String appointmentId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final results = await conn.query("SELECT * FROM consultation_appointments WHERE id = '$appointmentId'");
+      final results = await conn.query(
+        'SELECT * FROM consultation_appointments WHERE id = ?',
+        [appointmentId],
+      );
       if (results.isEmpty) return null;
       final fields = results.first.fields;
       return ConsultationAppointment(
@@ -53,11 +56,9 @@ class ConsultationAppointmentService {
     try {
       final newAppointmentId = Uuid().v4();
       final dateStr = appointmentDatetime.toIso8601String();
-      // If details is null, insert SQL NULL without quotes.
-      final detailsValue = details == null ? "NULL" : "'$details'";
       await conn.query(
-          "INSERT INTO consultation_appointments (id, consultation_id, appointment_datetime, details, order_id) "
-              "VALUES ('$newAppointmentId', '$consultationId', '$dateStr', $detailsValue, '$orderId')"
+        'INSERT INTO consultation_appointments (id, consultation_id, appointment_datetime, details, order_id) VALUES (?, ?, ?, ?, ?)',
+        [newAppointmentId, consultationId, dateStr, details, orderId],
       );
       return ConsultationAppointment(
         id: newAppointmentId,
@@ -76,28 +77,32 @@ class ConsultationAppointmentService {
     final conn = await MySQLConnection.openConnection();
     try {
       final updates = <String>[];
+      final params = <Object?>[];
 
       if (body.containsKey('consultationId')) {
-        updates.add("consultation_id = '${body['consultationId']}'");
+        updates.add('consultation_id = ?');
+        params.add(body['consultationId']);
       }
       if (body.containsKey('appointmentDatetime')) {
         final dt = DateTime.tryParse(body['appointmentDatetime'].toString());
         if (dt != null) {
-          updates.add("appointment_datetime = '${dt.toIso8601String()}'");
+          updates.add('appointment_datetime = ?');
+          params.add(dt.toIso8601String());
         }
       }
       if (body.containsKey('details')) {
-        final d = body['details'];
-        // If null, use SQL NULL; otherwise wrap in quotes.
-        final detailsStr = d == null ? "NULL" : "'$d'";
-        updates.add("details = $detailsStr");
+        updates.add('details = ?');
+        params.add(body['details']);
       }
       if (body.containsKey('orderId')) {
-        updates.add("order_id = '${body['orderId']}'");
+        updates.add('order_id = ?');
+        params.add(body['orderId']);
       }
       if (updates.isEmpty) return false;
-      final query = "UPDATE consultation_appointments SET ${updates.join(', ')}, updated_at = NOW() WHERE id = '$appointmentId'";
-      final result = await conn.query(query);
+      updates.add('updated_at = NOW()');
+      params.add(appointmentId); // For WHERE clause
+      final query = 'UPDATE consultation_appointments SET ${updates.join(", ")} WHERE id = ?';
+      final result = await conn.query(query, params);
       return result.affectedRows != null && result.affectedRows! > 0;
     } finally {
       await conn.close();
@@ -108,7 +113,10 @@ class ConsultationAppointmentService {
   static Future<bool> deleteAppointment(String appointmentId) async {
     final conn = await MySQLConnection.openConnection();
     try {
-      final result = await conn.query("DELETE FROM consultation_appointments WHERE id = '$appointmentId'");
+      final result = await conn.query(
+        'DELETE FROM consultation_appointments WHERE id = ?',
+        [appointmentId],
+      );
       return result.affectedRows != null && result.affectedRows! > 0;
     } finally {
       await conn.close();

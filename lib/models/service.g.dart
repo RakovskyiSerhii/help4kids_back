@@ -14,7 +14,7 @@ _$ServiceImpl _$$ServiceImplFromJson(Map<String, dynamic> json) =>
       longDescription: json['longDescription'] as String?,
       image: json['image'] as String?,
       icon: json['icon'] as String,
-      price: (json['price'] as num).toDouble(),
+      price: ServicePrice.fromJson(json['price'] as Map<String, dynamic>),
       duration: (json['duration'] as num?)?.toInt(),
       categoryId: json['categoryId'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),

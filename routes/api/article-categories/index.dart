@@ -1,38 +1,57 @@
 import 'package:dart_frog/dart_frog.dart';
 import 'package:help4kids/services/article_category_service.dart';
+import 'package:help4kids/utils/auth_helpers.dart';
+import 'package:help4kids/utils/errors.dart';
+import 'package:help4kids/utils/validation.dart';
+import 'package:help4kids/utils/response_helpers.dart';
 
 Future<Response> onRequest(RequestContext context) async {
   // GET /api/article-categories: List all categories (public)
   if (context.request.method == HttpMethod.get) {
-    final categories = await ArticleCategoryService.getAllArticleCategories();
-    return Response.json(
-      body: {'categories': categories.map((c) => c.toJson()).toList()},
-    );
+    try {
+      final categories = await ArticleCategoryService.getAllArticleCategories();
+      return ResponseHelpers.success(
+        {'categories': categories.map((c) => c.toJson()).toList()},
+      );
+    } catch (e) {
+      return ResponseHelpers.error(
+        ApiErrors.internalError('Failed to fetch categories'),
+      );
+    }
   }
   // POST /api/article-categories: Create a new category (admin/god only)
   else if (context.request.method == HttpMethod.post) {
-    final role = context.request.headers['x-role'] ?? 'customer';
-    if (role != 'admin' && role != 'god') {
-      return Response.json(
-        body: {'error': 'Unauthorized'},
-        statusCode: 403,
-      );
-    }
-    final body = await context.request.json();
-    final title = body['title'] as String?;
-    // description is optional
-    final description = body['description'] as String?;
-    if (title == null) {
-      return Response.json(
-        body: {'error': 'Missing required field: title'},
-        statusCode: 400,
-      );
-    }
-    final category = await ArticleCategoryService.createArticleCategory(
-      title: title,
-      description: description,
-    );
-    return Response.json(body: category.toJson());
+    final handler = requireAdmin((context) async {
+      try {
+        final body = await context.request.json() as Map<String, dynamic>;
+        final title = body['title'] as String?;
+        final description = body['description'] as String?;
+
+        if (title == null) {
+          return ResponseHelpers.error(
+            ApiErrors.validationError('Missing required field: title'),
+          );
+        }
+
+        if (!Validation.isNotEmpty(title)) {
+          return ResponseHelpers.error(
+            ApiErrors.validationError('Title cannot be empty'),
+          );
+        }
+
+        final category = await ArticleCategoryService.createArticleCategory(
+          title: title.trim(),
+          description: description?.trim(),
+        );
+        return ResponseHelpers.success(category.toJson());
+      } catch (e) {
+        return ResponseHelpers.error(
+          ApiErrors.internalError('Failed to create category'),
+        );
+      }
+    });
+
+    return handler(context);
   }
-  return Response(statusCode: 405);
+  return ResponseHelpers.methodNotAllowed();
 }
