@@ -84,7 +84,12 @@ class ConnectionPool {
       db: AppConfig.dbName,
     );
     
-    return await MySqlConnection.connect(settings);
+    final conn = await MySqlConnection.connect(settings);
+    
+    // Set charset to utf8mb4 for proper encoding
+    await conn.query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+    
+    return conn;
   }
 
   /// Wait for a connection to become available
