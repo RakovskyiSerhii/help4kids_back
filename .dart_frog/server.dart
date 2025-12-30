@@ -31,8 +31,8 @@ import '../routes/api/consultations/me.dart' as api_consultations_me;
 import '../routes/api/consultations/index.dart' as api_consultations_index;
 import '../routes/api/consultations/consultation/[consultationId].dart' as api_consultations_consultation_$consultation_id;
 import '../routes/api/consultation-appointments/index.dart' as api_consultation_appointments_index;
-import '../routes/api/consultation-appointments/[appointmentId].dart' as api_consultation_appointments_$appointment_id;
 import '../routes/api/consultation-appointments/[appointmentId]/process.dart' as api_consultation_appointments_$appointment_id_process;
+import '../routes/api/consultation-appointments/[appointmentId]/index.dart' as api_consultation_appointments_$appointment_id_index;
 import '../routes/api/auth/verify_email.dart' as api_auth_verify_email;
 import '../routes/api/auth/resend_email.dart' as api_auth_resend_email;
 import '../routes/api/auth/register.dart' as api_auth_register;
@@ -124,14 +124,14 @@ Handler buildApiAuthHandler() {
 Handler buildApiConsultationAppointments$appointmentIdHandler(String appointmentId,) {
   final pipeline = const Pipeline();
   final router = Router()
-    ..all('/process', (context) => api_consultation_appointments_$appointment_id_process.onRequest(context,appointmentId,));
+    ..all('/process', (context) => api_consultation_appointments_$appointment_id_process.onRequest(context,appointmentId,))..all('/', (context) => api_consultation_appointments_$appointment_id_index.onRequest(context,appointmentId,));
   return pipeline.addHandler(router);
 }
 
 Handler buildApiConsultationAppointmentsHandler() {
   final pipeline = const Pipeline();
   final router = Router()
-    ..all('/', (context) => api_consultation_appointments_index.onRequest(context,))..all('/<appointmentId>', (context,appointmentId,) => api_consultation_appointments_$appointment_id.onRequest(context,appointmentId,));
+    ..all('/', (context) => api_consultation_appointments_index.onRequest(context,));
   return pipeline.addHandler(router);
 }
 

@@ -26,6 +26,9 @@ Future<Response> onRequest(RequestContext context) async {
       final consultationResults = results[3];
       final serviceCategoryResults = results[4];
 
+      // Debug logging to check query results
+      print('Query results count - units: ${unitResults.length}, social: ${socialResults.length}, finance: ${financeResults.length}, consultations: ${consultationResults.length}, categories: ${serviceCategoryResults.length}');
+
       final units = unitResults.map((row) => Unit.fromRow(row.fields)).toList();
       final socialContacts =
           socialResults.map((row) => SocialContact.fromRow(row.fields)).toList();
@@ -42,15 +45,34 @@ Future<Response> onRequest(RequestContext context) async {
           .whereType<FinanceInfo>()
           .toList();
       final consultation = consultationResults
-          .map((row) => Consultation.fromMap(row.fields))
+          .map((row) {
+            try {
+              return Consultation.fromMap(row.fields);
+            } catch (e) {
+              // Log error but continue processing other rows
+              print('Error parsing consultation row: $e, row: ${row.fields}');
+              return null;
+            }
+          })
+          .whereType<Consultation>()
           .toList();
       final serviceCategories = serviceCategoryResults
-          .map((row) => ServiceCategory(
-                id: row['id']?.toString() ?? '',
-                name: row['name']?.toString() ?? '',
-                iconUrl: row['iconUrl']?.toString() ?? '',
-                description: row['description']?.toString() ?? '',
-              ))
+          .map((row) {
+            try {
+              final fields = row.fields;
+              return ServiceCategory(
+                id: fields['id']?.toString() ?? '',
+                name: fields['name']?.toString() ?? '',
+                iconUrl: fields['iconUrl']?.toString(),
+                description: fields['description']?.toString(),
+              );
+            } catch (e) {
+              // Log error but continue processing other rows
+              print('Error parsing service category row: $e, row: ${row.fields}');
+              return null;
+            }
+          })
+          .whereType<ServiceCategory>()
           .toList();
 
       final response = {

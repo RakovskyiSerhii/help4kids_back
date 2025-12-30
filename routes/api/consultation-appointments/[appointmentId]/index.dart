@@ -69,3 +69,4 @@ Future<Response> onRequest(RequestContext context, String appointmentId) async {
 
   return handler(context);
 }
+

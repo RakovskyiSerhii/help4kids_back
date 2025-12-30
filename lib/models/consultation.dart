@@ -48,6 +48,17 @@ class Consultation with _$Consultation {
       }
     }
 
+    // Parse dates safely
+    DateTime parseDate(dynamic dateValue) {
+      if (dateValue == null) return DateTime.now();
+      try {
+        if (dateValue is DateTime) return dateValue;
+        return DateTime.parse(dateValue.toString());
+      } catch (e) {
+        return DateTime.now();
+      }
+    }
+
     return Consultation(
       id: map['id']?.toString() ?? '',
       title: map['title']?.toString() ?? '',
@@ -57,8 +68,8 @@ class Consultation with _$Consultation {
       duration: map['duration']?.toString(),
       question: questionMap,
       featured: map['featured'] == 1 || map['featured'] == true,
-      createdAt: DateTime.parse(map['created_at'].toString()),
-      updatedAt: DateTime.parse(map['updated_at'].toString()),
+      createdAt: parseDate(map['created_at']),
+      updatedAt: parseDate(map['updated_at']),
       createdBy: map['created_by']?.toString(),
       updatedBy: map['updated_by']?.toString(),
     );
