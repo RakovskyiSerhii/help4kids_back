@@ -44,12 +44,32 @@ class ConnectionPool {
     // Try to get an available connection
     if (_availableConnections.isNotEmpty) {
       connection = _availableConnections.removeAt(0);
+      // Ensure charset is set on reused connections
+      try {
+        await connection.query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+      } catch (e) {
+        // Connection might be dead, create a new one
+        try {
+          connection.close();
+        } catch (_) {}
+        connection = await _createConnection();
+      }
     } else if (_inUseConnections.length < _maxPoolSize) {
       // Create a new connection if under max pool size
       connection = await _createConnection();
     } else {
       // Wait for a connection to become available
       connection = await _waitForConnection();
+      // Ensure charset is set
+      try {
+        await connection.query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+      } catch (e) {
+        // Connection might be dead, create a new one
+        try {
+          connection.close();
+        } catch (_) {}
+        connection = await _createConnection();
+      }
     }
 
     _inUseConnections.add(connection);
