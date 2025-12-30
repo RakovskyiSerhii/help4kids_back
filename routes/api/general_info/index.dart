@@ -85,9 +85,11 @@ Future<Response> onRequest(RequestContext context) async {
       };
 
       return ResponseHelpers.success(response);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('Error in general_info endpoint: $e');
+      print('Stack trace: $stackTrace');
       return ResponseHelpers.error(
-        ApiErrors.internalError('Failed to fetch general info'),
+        ApiErrors.internalError('Failed to fetch general info: $e'),
       );
     }
   }
