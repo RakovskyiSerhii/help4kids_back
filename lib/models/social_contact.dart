@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:mysql1/mysql1.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'social_contact.freezed.dart';
 part 'social_contact.g.dart';
@@ -14,9 +16,18 @@ class SocialContact with _$SocialContact {
 
   factory SocialContact.fromRow(Map<String, dynamic> row) {
     return SocialContact(
-      id: row['id'].toString(),
-      url: row['url'].toString(),
-      name: row['name'].toString(),
+      id: _toStringValue(row['id']),
+      url: _toStringValue(row['url']),
+      name: _toStringValue(row['name']),
     );
+  }
+
+  static String _toStringValue(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    if (value is Blob) {
+      return utf8.decode(value.toList());
+    }
+    return value.toString();
   }
 }

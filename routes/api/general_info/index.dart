@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:dart_frog/dart_frog.dart';
+import 'package:mysql1/mysql1.dart';
 import 'package:help4kids/models/consultation.dart';
 import 'package:help4kids/models/finance_info.dart';
 import 'package:help4kids/models/service_category.dart';
@@ -7,6 +9,15 @@ import 'package:help4kids/models/unit.dart';
 import 'package:help4kids/utils/errors.dart';
 import 'package:help4kids/utils/response_helpers.dart';
 import 'package:help4kids/utils/db_helper.dart';
+
+String _toStringValue(dynamic value) {
+  if (value == null) return '';
+  if (value is String) return value;
+  if (value is Blob) {
+    return utf8.decode(value.toList());
+  }
+  return value.toString();
+}
 
 Future<Response> onRequest(RequestContext context) async {
   if (context.request.method == HttpMethod.get) {
@@ -61,10 +72,10 @@ Future<Response> onRequest(RequestContext context) async {
             try {
               final fields = row.fields;
               return ServiceCategory(
-                id: fields['id']?.toString() ?? '',
-                name: fields['name']?.toString() ?? '',
-                iconUrl: fields['iconUrl']?.toString(),
-                description: fields['description']?.toString(),
+                id: _toStringValue(fields['id']),
+                name: _toStringValue(fields['name']),
+                iconUrl: fields['iconUrl'] != null ? _toStringValue(fields['iconUrl']) : null,
+                description: fields['description'] != null ? _toStringValue(fields['description']) : null,
               );
             } catch (e) {
               // Log error but continue processing other rows

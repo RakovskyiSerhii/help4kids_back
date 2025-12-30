@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:mysql1/mysql1.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'finance_info.freezed.dart';
 part 'finance_info.g.dart';
@@ -17,11 +19,20 @@ class FinanceInfo with _$FinanceInfo {
 
   factory FinanceInfo.fromRow(Map<String, dynamic> row) {
     return FinanceInfo(
-      id: row['id']?.toString() ?? '',
-      tNumber: row['t_number']?.toString() ?? '',
-      name: row['name']?.toString() ?? '',
-      officialAddress: row['official_address']?.toString() ?? '',
-      actualAddress: row['actual_address']?.toString() ?? '',
+      id: _toStringValue(row['id']),
+      tNumber: _toStringValue(row['t_number']),
+      name: _toStringValue(row['name']),
+      officialAddress: _toStringValue(row['official_address']),
+      actualAddress: _toStringValue(row['actual_address']),
     );
+  }
+
+  static String _toStringValue(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    if (value is Blob) {
+      return utf8.decode(value.toList());
+    }
+    return value.toString();
   }
 }

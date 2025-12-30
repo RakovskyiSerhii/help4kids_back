@@ -1,8 +1,18 @@
+import 'dart:convert';
 import 'package:mysql1/mysql1.dart';
 import '../data/mysql_connection.dart';
 
 /// Helper class for database operations with automatic connection management
 class DbHelper {
+  /// Safely convert a database value to String, handling Blob types
+  static String toStringValue(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    if (value is Blob) {
+      return utf8.decode(value.toList());
+    }
+    return value.toString();
+  }
   /// Execute a database operation with automatic connection management
   static Future<T> withConnection<T>(
     Future<T> Function(MySqlConnection conn) operation,
