@@ -22,8 +22,12 @@ Consultation _$ConsultationFromJson(Map<String, dynamic> json) {
 mixin _$Consultation {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  String get shortDescription => throw _privateConstructorUsedError;
+  String? get shortDescription => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   double get price => throw _privateConstructorUsedError;
+  String? get duration => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get question => throw _privateConstructorUsedError;
+  bool get featured => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
   String? get createdBy => throw _privateConstructorUsedError;
@@ -48,8 +52,12 @@ abstract class $ConsultationCopyWith<$Res> {
   $Res call(
       {String id,
       String title,
-      String shortDescription,
+      String? shortDescription,
+      String? description,
       double price,
+      String? duration,
+      Map<String, dynamic>? question,
+      bool featured,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
@@ -73,8 +81,12 @@ class _$ConsultationCopyWithImpl<$Res, $Val extends Consultation>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? shortDescription = null,
+    Object? shortDescription = freezed,
+    Object? description = freezed,
     Object? price = null,
+    Object? duration = freezed,
+    Object? question = freezed,
+    Object? featured = null,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? createdBy = freezed,
@@ -89,14 +101,30 @@ class _$ConsultationCopyWithImpl<$Res, $Val extends Consultation>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      shortDescription: null == shortDescription
+      shortDescription: freezed == shortDescription
           ? _value.shortDescription
           : shortDescription // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as double,
+      duration: freezed == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as String?,
+      question: freezed == question
+          ? _value.question
+          : question // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      featured: null == featured
+          ? _value.featured
+          : featured // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -128,8 +156,12 @@ abstract class _$$ConsultationImplCopyWith<$Res>
   $Res call(
       {String id,
       String title,
-      String shortDescription,
+      String? shortDescription,
+      String? description,
       double price,
+      String? duration,
+      Map<String, dynamic>? question,
+      bool featured,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
@@ -151,8 +183,12 @@ class __$$ConsultationImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? shortDescription = null,
+    Object? shortDescription = freezed,
+    Object? description = freezed,
     Object? price = null,
+    Object? duration = freezed,
+    Object? question = freezed,
+    Object? featured = null,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? createdBy = freezed,
@@ -167,14 +203,30 @@ class __$$ConsultationImplCopyWithImpl<$Res>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      shortDescription: null == shortDescription
+      shortDescription: freezed == shortDescription
           ? _value.shortDescription
           : shortDescription // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as double,
+      duration: freezed == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as String?,
+      question: freezed == question
+          ? _value._question
+          : question // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      featured: null == featured
+          ? _value.featured
+          : featured // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -201,12 +253,17 @@ class _$ConsultationImpl implements _Consultation {
   const _$ConsultationImpl(
       {required this.id,
       required this.title,
-      required this.shortDescription,
+      this.shortDescription,
+      this.description,
       required this.price,
+      this.duration,
+      final Map<String, dynamic>? question,
+      this.featured = false,
       required this.createdAt,
       required this.updatedAt,
       this.createdBy,
-      this.updatedBy});
+      this.updatedBy})
+      : _question = question;
 
   factory _$ConsultationImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsultationImplFromJson(json);
@@ -216,9 +273,26 @@ class _$ConsultationImpl implements _Consultation {
   @override
   final String title;
   @override
-  final String shortDescription;
+  final String? shortDescription;
+  @override
+  final String? description;
   @override
   final double price;
+  @override
+  final String? duration;
+  final Map<String, dynamic>? _question;
+  @override
+  Map<String, dynamic>? get question {
+    final value = _question;
+    if (value == null) return null;
+    if (_question is EqualUnmodifiableMapView) return _question;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  @override
+  @JsonKey()
+  final bool featured;
   @override
   final DateTime createdAt;
   @override
@@ -230,7 +304,7 @@ class _$ConsultationImpl implements _Consultation {
 
   @override
   String toString() {
-    return 'Consultation(id: $id, title: $title, shortDescription: $shortDescription, price: $price, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy)';
+    return 'Consultation(id: $id, title: $title, shortDescription: $shortDescription, description: $description, price: $price, duration: $duration, question: $question, featured: $featured, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy)';
   }
 
   @override
@@ -242,7 +316,14 @@ class _$ConsultationImpl implements _Consultation {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.shortDescription, shortDescription) ||
                 other.shortDescription == shortDescription) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.price, price) || other.price == price) &&
+            (identical(other.duration, duration) ||
+                other.duration == duration) &&
+            const DeepCollectionEquality().equals(other._question, _question) &&
+            (identical(other.featured, featured) ||
+                other.featured == featured) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -255,8 +336,20 @@ class _$ConsultationImpl implements _Consultation {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, shortDescription,
-      price, createdAt, updatedAt, createdBy, updatedBy);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      title,
+      shortDescription,
+      description,
+      price,
+      duration,
+      const DeepCollectionEquality().hash(_question),
+      featured,
+      createdAt,
+      updatedAt,
+      createdBy,
+      updatedBy);
 
   /// Create a copy of Consultation
   /// with the given fields replaced by the non-null parameter values.
@@ -278,8 +371,12 @@ abstract class _Consultation implements Consultation {
   const factory _Consultation(
       {required final String id,
       required final String title,
-      required final String shortDescription,
+      final String? shortDescription,
+      final String? description,
       required final double price,
+      final String? duration,
+      final Map<String, dynamic>? question,
+      final bool featured,
       required final DateTime createdAt,
       required final DateTime updatedAt,
       final String? createdBy,
@@ -293,9 +390,17 @@ abstract class _Consultation implements Consultation {
   @override
   String get title;
   @override
-  String get shortDescription;
+  String? get shortDescription;
+  @override
+  String? get description;
   @override
   double get price;
+  @override
+  String? get duration;
+  @override
+  Map<String, dynamic>? get question;
+  @override
+  bool get featured;
   @override
   DateTime get createdAt;
   @override

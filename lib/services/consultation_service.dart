@@ -8,19 +8,7 @@ class ConsultationService {
     final conn = await MySQLConnection.openConnection();
     try {
       final results = await conn.query('SELECT * FROM consultations');
-      return results.map((row) {
-        final fields = row.fields;
-        return Consultation(
-          id: fields['id']?.toString() ?? '',
-          title: fields['title']?.toString() ?? '',
-          shortDescription: fields['short_description']?.toString() ?? '',
-          price: double.tryParse(fields['price']?.toString() ?? '0') ?? 0,
-          createdAt: DateTime.parse(fields['created_at'].toString()),
-          updatedAt: DateTime.parse(fields['updated_at'].toString()),
-          createdBy: fields['created_by']?.toString(),
-          updatedBy: fields['updated_by']?.toString(),
-        );
-      }).toList();
+      return results.map((row) => Consultation.fromMap(row.fields)).toList();
     } finally {
       await conn.close();
     }
@@ -35,17 +23,7 @@ class ConsultationService {
         [consultationId],
       );
       if (results.isEmpty) return null;
-      final fields = results.first.fields;
-      return Consultation(
-        id: fields['id']?.toString() ?? '',
-        title: fields['title']?.toString() ?? '',
-        shortDescription: fields['short_description']?.toString() ?? '',
-        price: double.tryParse(fields['price']?.toString() ?? '0') ?? 0,
-        createdAt: DateTime.parse(fields['created_at'].toString()),
-        updatedAt: DateTime.parse(fields['updated_at'].toString()),
-        createdBy: fields['created_by']?.toString(),
-        updatedBy: fields['updated_by']?.toString(),
-      );
+      return Consultation.fromMap(results.first.fields);
     } finally {
       await conn.close();
     }
@@ -132,19 +110,7 @@ class ConsultationService {
         "SELECT c.* FROM consultations c JOIN orders o ON c.id = o.service_id WHERE o.user_id = ? AND o.service_type = 'consultation' AND o.status = 'paid'",
         [userId],
       );
-      return results.map((row) {
-        final fields = row.fields;
-        return Consultation(
-          id: fields['id']?.toString() ?? '',
-          title: fields['title']?.toString() ?? '',
-          shortDescription: fields['short_description']?.toString() ?? '',
-          price: double.tryParse(fields['price']?.toString() ?? '0') ?? 0,
-          createdAt: DateTime.parse(fields['created_at'].toString()),
-          updatedAt: DateTime.parse(fields['updated_at'].toString()),
-          createdBy: fields['created_by']?.toString(),
-          updatedBy: fields['updated_by']?.toString(),
-        );
-      }).toList();
+      return results.map((row) => Consultation.fromMap(row.fields)).toList();
     } finally {
       await conn.close();
     }

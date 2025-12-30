@@ -347,8 +347,8 @@ INSERT INTO finance_info (
 -- Insert Service Categories and Services
 -- Category 1: Консультативні прийоми лікарів-педіатрів в медичному центрі
 SET @cat1 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat1, 'Консультативні прийоми лікарів-педіатрів в медичному центрі', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat1, 'Консультативні прийоми лікарів-педіатрів в медичному центрі', 'ic_stethoscope.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -360,8 +360,8 @@ VALUES
 
 -- Category 2: Гінекологія
 SET @cat2 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat2, 'Гінекологія', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat2, 'Гінекологія', 'ic_gynecology.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -388,8 +388,8 @@ VALUES
 
 -- Category 3: Кардіолог
 SET @cat3 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat3, 'Кардіолог', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat3, 'Кардіолог', 'ic_heart_pulse.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -399,8 +399,8 @@ VALUES
 
 -- Category 4: Невролог
 SET @cat4 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat4, 'Невролог', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat4, 'Невролог', 'ic_brain.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -411,8 +411,8 @@ VALUES
 
 -- Category 5: Ортопед-травматолог
 SET @cat5 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat5, 'Ортопед-травматолог', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat5, 'Ортопед-травматолог', 'ic_bone.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -422,8 +422,8 @@ VALUES
 
 -- Category 6: Хірург
 SET @cat6 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat6, 'Хірург', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat6, 'Хірург', 'ic_scalpel.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -432,8 +432,8 @@ VALUES
 
 -- Category 7: Дерматолог
 SET @cat7 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat7, 'Дерматолог', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat7, 'Дерматолог', 'ic_skin.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -449,8 +449,8 @@ VALUES
 
 -- Category 8: Фототерапія
 SET @cat8 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat8, 'Фототерапія', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat8, 'Фототерапія', 'ic_sun.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -460,8 +460,8 @@ VALUES
 
 -- Category 9: УЗД діагностика
 SET @cat9 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat9, 'УЗД діагностика', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat9, 'УЗД діагностика', 'ic_monitor.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -486,8 +486,8 @@ VALUES
 
 -- Category 10: Оформлення довідок
 SET @cat10 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat10, 'Оформлення довідок', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat10, 'Оформлення довідок', 'ic_document.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -501,8 +501,8 @@ VALUES
 
 -- Category 11: Експрес-тести
 SET @cat11 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat11, 'Експрес-тести', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat11, 'Експрес-тести', 'ic_flask.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -519,40 +519,40 @@ VALUES
 
 -- Category 12: Тест глюкоза
 SET @cat12 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat12, 'Тест глюкоза', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat12, 'Тест глюкоза', 'ic_glucose.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES (UUID(), @cat12, 'Тест глюкоза', '{"price":150}', NOW(), NOW());
 
 -- Category 13: Клініка крові
 SET @cat13 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat13, 'Клініка крові', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat13, 'Клініка крові', 'ic_blood.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES (UUID(), @cat13, 'Клініка крові', '{"price":260}', NOW(), NOW());
 
 -- Category 14: Клініка сечі
 SET @cat14 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat14, 'Клініка сечі', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat14, 'Клініка сечі', 'ic_urine.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES (UUID(), @cat14, 'Клініка сечі', '{"price":150}', NOW(), NOW());
 
 -- Category 15: ЕКГ з розшифровкою
 SET @cat15 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat15, 'ЕКГ з розшифровкою', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat15, 'ЕКГ з розшифровкою', 'ic_ecg.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES (UUID(), @cat15, 'ЕКГ з розшифровкою', '{"price":200}', NOW(), NOW());
 
 -- Category 16: Маніпуляції
 SET @cat16 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat16, 'Маніпуляції', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat16, 'Маніпуляції', 'ic_syringe.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -565,8 +565,8 @@ VALUES
 
 -- Category 17: Прокол вух (система Studex75)
 SET @cat17 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat17, 'Прокол вух (система Studex75)', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat17, 'Прокол вух (система Studex75)', 'ic_gem.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -576,8 +576,8 @@ VALUES
 
 -- Category 18: Вакцинація
 SET @cat18 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat18, 'Вакцинація', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat18, 'Вакцинація', 'ic_syringe.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 
@@ -613,8 +613,8 @@ VALUES
 
 -- Category 19: Послуга вакцинації вакциєю, придбаною особисто
 SET @cat19 = UUID();
-INSERT INTO service_categories (id, name, created_at, updated_at)
-VALUES (@cat19, 'Послуга вакцинації вакциєю, придбаною особисто', NOW(), NOW());
+INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
+VALUES (@cat19, 'Послуга вакцинації вакциєю, придбаною особисто', 'ic_syringe.svg', NOW(), NOW());
 
 INSERT INTO services (id, category_id, title, price, created_at, updated_at)
 VALUES 

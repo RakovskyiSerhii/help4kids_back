@@ -19,6 +19,7 @@ import '../routes/api/orders/index.dart' as api_orders_index;
 import '../routes/api/orders/confirm-payment.dart' as api_orders_confirm_payment;
 import '../routes/api/orders/order/[orderId].dart' as api_orders_order_$order_id;
 import '../routes/api/landing/index.dart' as api_landing_index;
+import '../routes/api/icons/[iconName].dart' as api_icons_$icon_name;
 import '../routes/api/general_info/units.dart' as api_general_info_units;
 import '../routes/api/general_info/social_contacts.dart' as api_general_info_social_contacts;
 import '../routes/api/general_info/index.dart' as api_general_info_index;
@@ -31,6 +32,7 @@ import '../routes/api/consultations/index.dart' as api_consultations_index;
 import '../routes/api/consultations/consultation/[consultationId].dart' as api_consultations_consultation_$consultation_id;
 import '../routes/api/consultation-appointments/index.dart' as api_consultation_appointments_index;
 import '../routes/api/consultation-appointments/[appointmentId].dart' as api_consultation_appointments_$appointment_id;
+import '../routes/api/consultation-appointments/[appointmentId]/process.dart' as api_consultation_appointments_$appointment_id_process;
 import '../routes/api/auth/verify_email.dart' as api_auth_verify_email;
 import '../routes/api/auth/resend_email.dart' as api_auth_resend_email;
 import '../routes/api/auth/register.dart' as api_auth_register;
@@ -66,12 +68,14 @@ Handler buildRootHandler() {
     ..mount('/api/articles/<articleId>', (context,articleId,) => buildApiArticles$articleIdHandler(articleId,)(context))
     ..mount('/api/articles', (context) => buildApiArticlesHandler()(context))
     ..mount('/api/auth', (context) => buildApiAuthHandler()(context))
+    ..mount('/api/consultation-appointments/<appointmentId>', (context,appointmentId,) => buildApiConsultationAppointments$appointmentIdHandler(appointmentId,)(context))
     ..mount('/api/consultation-appointments', (context) => buildApiConsultationAppointmentsHandler()(context))
     ..mount('/api/consultations/consultation', (context) => buildApiConsultationsConsultationHandler()(context))
     ..mount('/api/consultations', (context) => buildApiConsultationsHandler()(context))
     ..mount('/api/courses/course', (context) => buildApiCoursesCourseHandler()(context))
     ..mount('/api/courses', (context) => buildApiCoursesHandler()(context))
     ..mount('/api/general_info', (context) => buildApiGeneralInfoHandler()(context))
+    ..mount('/api/icons', (context) => buildApiIconsHandler()(context))
     ..mount('/api/landing', (context) => buildApiLandingHandler()(context))
     ..mount('/api/orders/order', (context) => buildApiOrdersOrderHandler()(context))
     ..mount('/api/orders', (context) => buildApiOrdersHandler()(context))
@@ -117,6 +121,13 @@ Handler buildApiAuthHandler() {
   return pipeline.addHandler(router);
 }
 
+Handler buildApiConsultationAppointments$appointmentIdHandler(String appointmentId,) {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/process', (context) => api_consultation_appointments_$appointment_id_process.onRequest(context,appointmentId,));
+  return pipeline.addHandler(router);
+}
+
 Handler buildApiConsultationAppointmentsHandler() {
   final pipeline = const Pipeline();
   final router = Router()
@@ -156,6 +167,13 @@ Handler buildApiGeneralInfoHandler() {
   final pipeline = const Pipeline();
   final router = Router()
     ..all('/units', (context) => api_general_info_units.onRequest(context,))..all('/social_contacts', (context) => api_general_info_social_contacts.onRequest(context,))..all('/', (context) => api_general_info_index.onRequest(context,))..all('/finance_info', (context) => api_general_info_finance_info.onRequest(context,));
+  return pipeline.addHandler(router);
+}
+
+Handler buildApiIconsHandler() {
+  final pipeline = const Pipeline();
+  final router = Router()
+    ..all('/<iconName>', (context,iconName,) => api_icons_$icon_name.onRequest(context,iconName,));
   return pipeline.addHandler(router);
 }
 

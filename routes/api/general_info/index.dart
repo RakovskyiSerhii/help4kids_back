@@ -29,8 +29,18 @@ Future<Response> onRequest(RequestContext context) async {
       final units = unitResults.map((row) => Unit.fromRow(row.fields)).toList();
       final socialContacts =
           socialResults.map((row) => SocialContact.fromRow(row.fields)).toList();
-      final financeInfos =
-          financeResults.map((row) => FinanceInfo.fromRow(row.fields)).toList();
+      final financeInfos = financeResults
+          .map((row) {
+            try {
+              return FinanceInfo.fromRow(row.fields);
+            } catch (e) {
+              // Log error but continue processing other rows
+              print('Error parsing finance info row: $e, row: ${row.fields}');
+              return null;
+            }
+          })
+          .whereType<FinanceInfo>()
+          .toList();
       final consultation = consultationResults
           .map((row) => Consultation.fromMap(row.fields))
           .toList();

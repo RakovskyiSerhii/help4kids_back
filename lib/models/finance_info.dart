@@ -17,11 +17,11 @@ class FinanceInfo with _$FinanceInfo {
 
   factory FinanceInfo.fromRow(Map<String, dynamic> row) {
     return FinanceInfo(
-      id: row['id'].toString(),
-      tNumber: row['t_number'].toString(),
-      name: row['name'].toString(),
-      officialAddress: row['official_address'].toString(),
-      actualAddress: row['actual_address'].toString(),
+      id: row['id']?.toString() ?? '',
+      tNumber: row['t_number']?.toString() ?? '',
+      name: row['name']?.toString() ?? '',
+      officialAddress: row['official_address']?.toString() ?? '',
+      actualAddress: row['actual_address']?.toString() ?? '',
     );
   }
 }
