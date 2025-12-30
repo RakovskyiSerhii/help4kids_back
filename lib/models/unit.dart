@@ -39,7 +39,7 @@ class Unit with _$Unit {
     if (value == null) return '';
     if (value is String) return value;
     if (value is Blob) {
-      return utf8.decode(value.toList());
+      return value.toString();
     }
     return value.toString();
   }

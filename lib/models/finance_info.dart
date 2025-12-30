@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:mysql1/mysql1.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'finance_info.freezed.dart';
@@ -31,7 +30,7 @@ class FinanceInfo with _$FinanceInfo {
     if (value == null) return '';
     if (value is String) return value;
     if (value is Blob) {
-      return utf8.decode(value.toList());
+      return value.toString();
     }
     return value.toString();
   }

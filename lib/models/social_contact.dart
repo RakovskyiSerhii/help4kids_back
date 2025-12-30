@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:mysql1/mysql1.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'social_contact.freezed.dart';
@@ -26,7 +25,7 @@ class SocialContact with _$SocialContact {
     if (value == null) return '';
     if (value is String) return value;
     if (value is Blob) {
-      return utf8.decode(value.toList());
+      return value.toString();
     }
     return value.toString();
   }

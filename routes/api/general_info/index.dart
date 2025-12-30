@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dart_frog/dart_frog.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:help4kids/models/consultation.dart';
@@ -14,7 +13,7 @@ String _toStringValue(dynamic value) {
   if (value == null) return '';
   if (value is String) return value;
   if (value is Blob) {
-    return utf8.decode(value.toList());
+    return value.toString();
   }
   return value.toString();
 }
