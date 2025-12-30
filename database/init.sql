@@ -8,11 +8,14 @@
 -- Drop existing database if it exists
 DROP DATABASE IF EXISTS help4kids_db;
 
--- Create the database
-CREATE DATABASE help4kids_db;
+-- Create the database with utf8mb4 charset
+CREATE DATABASE help4kids_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Use the database
 USE help4kids_db;
+
+-- Set default charset for session
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- ============================================
 -- TABLE CREATION
@@ -21,17 +24,17 @@ USE help4kids_db;
 -- 1. Roles Table
 CREATE TABLE roles (
   id VARCHAR(36) PRIMARY KEY,
-  name VARCHAR(50) NOT NULL UNIQUE,
-  description TEXT
-);
+  name VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
+  description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 2. Users Table
 CREATE TABLE users (
   id VARCHAR(36) PRIMARY KEY,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  password_hash TEXT NOT NULL,
-  first_name VARCHAR(100) NOT NULL,
-  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
+  password_hash TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  first_name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  last_name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   role_id VARCHAR(36) NOT NULL,
   is_verified BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -39,7 +42,7 @@ CREATE TABLE users (
   created_by VARCHAR(36),
   updated_by VARCHAR(36),
   FOREIGN KEY (role_id) REFERENCES roles(id)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 3. Activity Logs Table
 CREATE TABLE activity_logs (
@@ -53,23 +56,23 @@ CREATE TABLE activity_logs (
 -- 4. Service Categories Table
 CREATE TABLE service_categories (
   id VARCHAR(36) PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  description TEXT,
-  iconUrl VARCHAR(255),
+  name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  iconUrl VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 5. Services Table
 CREATE TABLE services (
   id VARCHAR(36) PRIMARY KEY,
   category_id VARCHAR(36) NOT NULL,
-  title VARCHAR(255) NOT NULL,
-  short_description TEXT,
-  long_description TEXT,
-  image VARCHAR(255),
-  icon VARCHAR(255),
+  title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  short_description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  long_description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  image VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  icon VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   price JSON NOT NULL,
   duration INT,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
@@ -79,49 +82,49 @@ CREATE TABLE services (
   created_by VARCHAR(36),
   updated_by VARCHAR(36),
   FOREIGN KEY (category_id) REFERENCES service_categories(id) ON DELETE CASCADE
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 6. Courses Table
 CREATE TABLE courses (
   id VARCHAR(36) PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  short_description TEXT, 
-  description TEXT,
-  long_description TEXT,
-  image VARCHAR(255),
-  icon VARCHAR(255) NOT NULL,
+  title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  short_description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, 
+  description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  long_description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  image VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  icon VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   price DECIMAL(10,2) NOT NULL,
   duration INT,
-  content_url VARCHAR(255) NOT NULL,
+  content_url VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(36),
   updated_by VARCHAR(36)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 7. Consultations Table
 CREATE TABLE consultations (
   id VARCHAR(36) PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  short_description TEXT, 
-  description TEXT,
+  title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  short_description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, 
+  description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   price DECIMAL(10,2) NOT NULL,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   ordering INT NOT NULL DEFAULT 0,
-  duration VARCHAR(255) DEFAULT NULL,
+  duration VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   question JSON,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(36),
   updated_by VARCHAR(36)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 8. Orders Table
 CREATE TABLE orders (
   id VARCHAR(36) PRIMARY KEY,
   user_id VARCHAR(36) NOT NULL,
-  order_reference VARCHAR(255) NOT NULL UNIQUE,
+  order_reference VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
   service_type ENUM('course','consultation','service') NOT NULL,
   service_id VARCHAR(36) NOT NULL,
   amount DECIMAL(10,2) NOT NULL,
@@ -130,13 +133,14 @@ CREATE TABLE orders (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- 9. Consultation Appointments Table (created after staff table)
 CREATE TABLE consultation_appointments (
   id VARCHAR(36) PRIMARY KEY,
   consultation_id VARCHAR(36) NOT NULL,
   appointment_datetime TIMESTAMP NOT NULL,
-  details TEXT,
+  details TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   order_id VARCHAR(36) NOT NULL,
   -- Processing / dashboard fields
   processed BOOLEAN NOT NULL DEFAULT FALSE,
@@ -147,34 +151,33 @@ CREATE TABLE consultation_appointments (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (consultation_id) REFERENCES consultations(id),
   FOREIGN KEY (order_id) REFERENCES orders(id),
-  FOREIGN KEY (processed_by) REFERENCES users(id),
-  FOREIGN KEY (doctor_id) REFERENCES staff(id)
-);
+  FOREIGN KEY (processed_by) REFERENCES users(id)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 10. Article Categories Table
 CREATE TABLE article_categories (
   id VARCHAR(36) PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
+  title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 11. Articles Table
 CREATE TABLE articles (
   id VARCHAR(36) PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  content TEXT NOT NULL,
+  title VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   category_id VARCHAR(36) NOT NULL,
-  long_description TEXT,
+  long_description TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(36),
   updated_by VARCHAR(36),
   FOREIGN KEY (category_id) REFERENCES article_categories(id)
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 12. Saved Articles Table
 CREATE TABLE saved_articles (
@@ -198,46 +201,49 @@ CREATE TABLE email_verification (
 -- 14. Staff Table
 CREATE TABLE staff (
   id VARCHAR(36) PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  content TEXT,
-  photo_url VARCHAR(255),
+  name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  content TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  photo_url VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   ordering INT NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Add foreign key for consultation_appointments.doctor_id after staff table is created
+ALTER TABLE consultation_appointments ADD FOREIGN KEY (doctor_id) REFERENCES staff(id);
 
 -- 15. Unit Table
 CREATE TABLE unit (
   id VARCHAR(36) PRIMARY KEY,
-  address VARCHAR(255) NOT NULL,
+  address VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   working_time JSON NOT NULL,
-  contact_phone VARCHAR(50) NOT NULL,
-  social_url VARCHAR(255),
-  email VARCHAR(255) NOT NULL,
+  contact_phone VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  social_url VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  email VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 16. Social Contacts Table
 CREATE TABLE social_contacts (
   id VARCHAR(36) PRIMARY KEY,
-  url VARCHAR(255) NOT NULL,
-  name VARCHAR(100) NOT NULL,
+  url VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 17. Finance Info Table
 CREATE TABLE finance_info (
   id VARCHAR(36) PRIMARY KEY,
-  t_number VARCHAR(100) NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  official_address VARCHAR(255) NOT NULL,
-  actual_address VARCHAR(255) NOT NULL,
+  t_number VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  official_address VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  actual_address VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- ============================================
 -- INITIAL DATA INSERTION
