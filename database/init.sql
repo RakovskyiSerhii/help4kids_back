@@ -356,13 +356,19 @@ SET @cat1 = UUID();
 INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
 VALUES (@cat1, 'Консультативні прийоми лікарів-педіатрів в медичному центрі', 'ic_stethoscope.svg', NOW(), NOW());
 
-INSERT INTO services (id, category_id, title, price, created_at, updated_at)
+INSERT INTO services (id, category_id, title, short_description, price, duration, created_at, updated_at)
 VALUES 
-(UUID(), @cat1, 'Консультація педіатра', '{"price":600, "repeatPrice":500}', NOW(), NOW()),
-(UUID(), @cat1, 'Консультація педіатра розширена (40-60 хв)', '{"price":700}', NOW(), NOW()),
-(UUID(), @cat1, 'Консультація педіатра, к.м.н. Раковської Людмили Олександрівни', '{"price":700, "repeatPrice":600}', NOW(), NOW()),
-(UUID(), @cat1, 'Консультація педіатра, к.м.н. Раковської Людмили Олександрівни 40 хв', '{"price":800}', NOW(), NOW()),
-(UUID(), @cat1, 'Консультація к.м.н. Раковської Людмили Олександрівни розширена (до 60хв)', '{"price":1200}', NOW(), NOW());
+(UUID(), @cat1, 'Консультація педіатра по хворобі (15-30 хв)', 'первинна/повторна', '{"price":600, "repeatPrice":550}', 15, NOW(), NOW()),
+(UUID(), @cat1, 'Консультація педіатра розширена/щомісячний патронаж/первинний огляд новонародженого (45 хв)', NULL, '{"price":900}', 45, NOW(), NOW()),
+(UUID(), @cat1, 'Консультація з рухового розвитку (45 хв)', NULL, '{"price":1200}', 45, NOW(), NOW()),
+(UUID(), @cat1, 'Консультація педіатра, к.м.н. Раковської Людмили Олександрівни', 'первинна/повторна', '{"price":750, "repeatPrice":700}', NULL, NOW(), NOW()),
+(UUID(), @cat1, 'Консультація к.м.н. Раковської Людмили Олександрівни розширена (60хв)', NULL, '{"price":1200}', 60, NOW(), NOW()),
+(UUID(), @cat1, 'Консультація педіатра, к.м.н. Раковської Людмили Олександрівни патронаж/плановий огляд (40 хв)', NULL, '{"price":1000}', 40, NOW(), NOW()),
+(UUID(), @cat1, 'Консультація зі сну (90хв)', 'Тільки онлайн', '{"price":2000}', 90, NOW(), NOW()),
+(UUID(), @cat1, 'Повторна консультація зі сну (60хв)', 'Тільки онлайн', '{"price":1200}', 60, NOW(), NOW()),
+(UUID(), @cat1, 'Онлайн підтримка педіатра Анастасії Сергіївни 3 місяці', 'Всі питання по хворобі/аналізам/харчуванню/розвитку в месенджері + 1 велика консультація/ місяць по телефону відео/аудіо формат', '{"price":4500}', NULL, NOW(), NOW()),
+(UUID(), @cat1, 'Онлайн підтримка педіатра Анастасії Сергіївни 6 місяців', NULL, '{"price":7500}', NULL, NOW(), NOW()),
+(UUID(), @cat1, 'Онлайн підтримка педіатра Анастасії Сергіївни 12 місяців', NULL, '{"price":14000}', NULL, NOW(), NOW());
 
 -- Category 2: Гінекологія
 SET @cat2 = UUID();
@@ -495,33 +501,33 @@ SET @cat10 = UUID();
 INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
 VALUES (@cat10, 'Оформлення довідок', 'ic_document.svg', NOW(), NOW());
 
-INSERT INTO services (id, category_id, title, price, created_at, updated_at)
+INSERT INTO services (id, category_id, title, short_description, price, duration, created_at, updated_at)
 VALUES 
-(UUID(), @cat10, 'Оформлення довідки 086 для вступу в дитячий садок, школу (медогляд ''Все включено'') + клініка крові, сечі, глюкоза крові', '{"price":1000}', NOW(), NOW()),
-(UUID(), @cat10, 'Оформлення довідки 086 Раковська Л. О.', '{"price":1200}', NOW(), NOW()),
-(UUID(), @cat10, 'Оформлення довідки в бассейн', '{"price":0, "customPriceString":"безкоштовно"}', NOW(), NOW()),
-(UUID(), @cat10, 'Оформлення довідки 063 про щеплення', '{"price":200}', NOW(), NOW()),
-(UUID(), @cat10, 'Оформлення довідки 063 про щеплення на англ. мові', '{"price":600}', NOW(), NOW()),
-(UUID(), @cat10, 'Видача довідок в дитячий садок або школу після хвороби', '{"price":0, "customPriceString":"безкоштовно"}', NOW(), NOW()),
-(UUID(), @cat10, 'Видача довідки в лагерь', '{"price":0, "customPriceString":"безкоштовно"}', NOW(), NOW());
+(UUID(), @cat10, 'Оформлення довідки 086 для вступу в дитячий садок, школу (медогляд)', 'При собі потрібно мати форму 063 або фото щеплень за віком або паспорт вакцинації; Огляд включає: оцінку стану здоров''я, вимірювання зросту і ваги, перевірка зору, слуху, постави, рекомендації по аналізам та подальшим щепленням за потреби.', '{"price":1000}', NULL, NOW(), NOW()),
+(UUID(), @cat10, 'Оформлення довідки в бассейн', 'тільки за умови огляду дитини педіатром; Попередньо слід здати кал на яйця глистів або зішкріб на ентеробіоз в будь-якій лабораторії і з результатами записатися на прийом до нас', '{"price":0, "customPriceString":"безкоштовно"}', NULL, NOW(), NOW()),
+(UUID(), @cat10, 'Оформлення довідки 063 про щеплення', 'при проведенні трьох і більше щеплень в медцентрі - безкоштовно', '{"price":300}', NULL, NOW(), NOW()),
+(UUID(), @cat10, 'Оформлення довідки 063 про щеплення на англ. мові', NULL, '{"price":600}', NULL, NOW(), NOW()),
+(UUID(), @cat10, 'Оформлення міжнародного паспорту вакцинації з перенесенням попередніх вакцин', 'при проведенні першої вакцинації в нашому МЦ - безкоштовно', '{"price":500}', NULL, NOW(), NOW()),
+(UUID(), @cat10, 'Видача довідок в дитячий садок або школу після хвороби', 'за умови спостереження лікарем медичного центру під час хвороби', '{"price":0, "customPriceString":"безкоштовно"}', NULL, NOW(), NOW()),
+(UUID(), @cat10, 'Видача довідки в дитячий табір (форма 079/о)', 'при огляді дитини на консультації', '{"price":0, "customPriceString":"безкоштовно"}', NULL, NOW(), NOW());
 
 -- Category 11: Експрес-тести
 SET @cat11 = UUID();
 INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
 VALUES (@cat11, 'Експрес-тести', 'ic_flask.svg', NOW(), NOW());
 
-INSERT INTO services (id, category_id, title, price, created_at, updated_at)
+INSERT INTO services (id, category_id, title, short_description, price, duration, created_at, updated_at)
 VALUES 
-(UUID(), @cat11, 'Експрес-тест на виявлення стрептококу гр А', '{"price":250}', NOW(), NOW()),
-(UUID(), @cat11, 'Тест на виявлення грипу А/В', '{"price":250}', NOW(), NOW()),
-(UUID(), @cat11, 'Швидкий тест на виявлення Ковід', '{"price":400}', NOW(), NOW()),
-(UUID(), @cat11, 'Швидкий тест на виявлення грип + Ковід', '{"price":300}', NOW(), NOW()),
-(UUID(), @cat11, 'Швидкий тест для визначення с-реактивного білка', '{"price":250}', NOW(), NOW()),
-(UUID(), @cat11, 'Швидкий тест на віт Д', '{"price":250}', NOW(), NOW()),
-(UUID(), @cat11, 'Швидкий тест на феритин', '{"price":250}', NOW(), NOW()),
-(UUID(), @cat11, 'Експрес-тест сечі на ацетон', '{"price":50}', NOW(), NOW()),
-(UUID(), @cat11, 'Експрес-тест сечі 10 параметрів', '{"price":100}', NOW(), NOW()),
-(UUID(), @cat11, 'Експрес-тест на тропонін І', '{"price":0}', NOW(), NOW());
+(UUID(), @cat11, 'Експрес-тест на виявлення стрептококу гр А', 'мазок з носоглотки', '{"price":250}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Тест на виявлення грипу А/В', 'мазок з носоглотки', '{"price":250}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Швидкий тест на виявлення Ковід', 'мазок з носоглотки', '{"price":0}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Швидкий тест на виявлення грип + Ковід (4в1)', 'мазок з носоглотки', '{"price":300}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Швидкий тест для визначення с-реактивного білка', 'аналіз крові з пальця', '{"price":250}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Швидкий тест на віт Д', 'аналіз крові з пальця', '{"price":250}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Швидкий тест на феритин', 'аналіз крові з пальця', '{"price":250}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Експрес-тест сечі на ацетон', NULL, '{"price":50}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Експрес-тест сечі 10 параметрів', 'лейкоцити, нітріти, білок, рН кров (клітини еритроцитів), глюкоза, питома вага, уробіліноген, кетони, білірубін', '{"price":100}', NULL, NOW(), NOW()),
+(UUID(), @cat11, 'Експрес-тест на тропонін І', 'немає наразі', '{"price":0}', NULL, NOW(), NOW());
 
 -- Category 12: Тест глюкоза
 SET @cat12 = UUID();
@@ -560,71 +566,77 @@ SET @cat16 = UUID();
 INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
 VALUES (@cat16, 'Маніпуляції', 'ic_syringe.svg', NOW(), NOW());
 
-INSERT INTO services (id, category_id, title, price, created_at, updated_at)
+INSERT INTO services (id, category_id, title, short_description, price, duration, created_at, updated_at)
 VALUES 
-(UUID(), @cat16, 'Внутрішньом''язова або підшкірна ін''єкції', '{"price":100}', NOW(), NOW()),
-(UUID(), @cat16, 'Внутрішньовенна інʼєкція', '{"price":200}', NOW(), NOW()),
-(UUID(), @cat16, 'Внутрішньовенна інфузія', '{"price":300}', NOW(), NOW()),
-(UUID(), @cat16, 'Введення протиблювотного препарату (в/м)', '{"price":200}', NOW(), NOW()),
-(UUID(), @cat16, 'Введення жарознижувального препарату (в/м)', '{"price":200}', NOW(), NOW()),
-(UUID(), @cat16, 'Забір аналізів', '{"price":0, "customPriceString":"50-200"}', NOW(), NOW());
+(UUID(), @cat16, 'Внутрішньом''язова або підшкірна ін''єкції', 'вартість препарату сплачується окремо', '{"price":100}', NULL, NOW(), NOW()),
+(UUID(), @cat16, 'Внутрішньовенна інʼєкція', NULL, '{"price":200}', NULL, NOW(), NOW()),
+(UUID(), @cat16, 'Введення протиблювотного препарату (в/м)', 'вартість препарату враховано', '{"price":200}', NULL, NOW(), NOW()),
+(UUID(), @cat16, 'Введення жарознижувального препарату (в/м)', 'вартість препарату враховано', '{"price":200}', NULL, NOW(), NOW()),
+(UUID(), @cat16, 'Видалення кліща', NULL, '{"price":700}', NULL, NOW(), NOW()),
+(UUID(), @cat16, 'Промивання носа', 'вартість шприца для промивання враховано', '{"price":150}', NULL, NOW(), NOW()),
+(UUID(), @cat16, 'Промивання вух', 'вартість шприца для промивання враховано', '{"price":150}', NULL, NOW(), NOW()),
+(UUID(), @cat16, 'Оренда спейсера', 'тиждень', '{"price":150}', NULL, NOW(), NOW()),
+(UUID(), @cat16, 'Оренда небулайзера', 'тиждень', '{"price":250}', NULL, NOW(), NOW());
 
 -- Category 17: Прокол вух (система Studex75)
 SET @cat17 = UUID();
 INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
 VALUES (@cat17, 'Прокол вух (система Studex75)', 'ic_gem.svg', NOW(), NOW());
 
-INSERT INTO services (id, category_id, title, price, created_at, updated_at)
+INSERT INTO services (id, category_id, title, short_description, price, duration, created_at, updated_at)
 VALUES 
-(UUID(), @cat17, 'Прокол', '{"price":400}', NOW(), NOW()),
-(UUID(), @cat17, 'Прокол 1 вуха', '{"price":300}', NOW(), NOW()),
-(UUID(), @cat17, 'Сережки', '{"price":0, "customPriceString":"від 500"}', NOW(), NOW());
+(UUID(), @cat17, 'Прокол', NULL, '{"price":800}', NULL, NOW(), NOW()),
+(UUID(), @cat17, 'Прокол 1 вуха', NULL, '{"price":500}', NULL, NOW(), NOW()),
+(UUID(), @cat17, 'Сережки', NULL, '{"price":0, "customPriceString":"від 500"}', NULL, NOW(), NOW());
 
 -- Category 18: Вакцинація
 SET @cat18 = UUID();
 INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
 VALUES (@cat18, 'Вакцинація', 'ic_syringe.svg', NOW(), NOW());
 
-INSERT INTO services (id, category_id, title, price, created_at, updated_at)
+INSERT INTO services (id, category_id, title, short_description, price, duration, created_at, updated_at)
 VALUES 
-(UUID(), @cat18, 'Гексаксим (Франція)', '{"price":2300}', NOW(), NOW()),
-(UUID(), @cat18, 'Інфанрикс Гекса (Бельгія)', '{"price":2500}', NOW(), NOW()),
-(UUID(), @cat18, 'Пентаксим (Франція)', '{"price":2000}', NOW(), NOW()),
-(UUID(), @cat18, 'Інфанрикс ІПВ ХІБ (Бельгія)', '{"price":2300}', NOW(), NOW()),
-(UUID(), @cat18, 'Бустрикс Поліо (Бельгія)', '{"price":1800}', NOW(), NOW()),
-(UUID(), @cat18, 'Тетраксим (Франція)', '{"price":1800}', NOW(), NOW()),
-(UUID(), @cat18, 'Інфанрикс ІПВ (Бельгія)', '{"price":2000}', NOW(), NOW()),
-(UUID(), @cat18, 'Бустрикс (Бельгія)', '{"price":1500}', NOW(), NOW()),
-(UUID(), @cat18, 'Інфанрикс (Бельгія)', '{"price":1650}', NOW(), NOW()),
-(UUID(), @cat18, 'Пріорикс (Бельгія)', '{"price":1300}', NOW(), NOW()),
-(UUID(), @cat18, 'М-М-РВАКСПРО (США)', '{"price":0}', NOW(), NOW()),
-(UUID(), @cat18, 'Ротарикс (Бельгія)', '{"price":1600}', NOW(), NOW()),
-(UUID(), @cat18, 'Ротатек (США)', '{"price":1700}', NOW(), NOW()),
-(UUID(), @cat18, 'Менактра (США)', '{"price":2100}', NOW(), NOW()),
-(UUID(), @cat18, 'Німенрикс (Бельгія)', '{"price":2500}', NOW(), NOW()),
-(UUID(), @cat18, 'Бексеро (Великобританія)', '{"price":4750}', NOW(), NOW()),
-(UUID(), @cat18, 'Синфлорикс (Бельгія)', '{"price":1900}', NOW(), NOW()),
-(UUID(), @cat18, 'Превенар 13 (Великобританія)', '{"price":3500}', NOW(), NOW()),
-(UUID(), @cat18, 'Церварикс (Бельгія)', '{"price":2500}', NOW(), NOW()),
-(UUID(), @cat18, 'Гардасил (США)', '{"price":6100}', NOW(), NOW()),
-(UUID(), @cat18, 'Хаврикс 720 (Бельгія)', '{"price":1700}', NOW(), NOW()),
-(UUID(), @cat18, 'Хаврикс 1440 (Бельгія)', '{"price":1800}', NOW(), NOW()),
-(UUID(), @cat18, 'Твінрикс (Бельгія)', '{"price":2200}', NOW(), NOW()),
-(UUID(), @cat18, 'Енджерикс дитячий 0,5мл', '{"price":1100}', NOW(), NOW()),
-(UUID(), @cat18, 'Енджерикс дорослий 1мл', '{"price":1200}', NOW(), NOW()),
-(UUID(), @cat18, 'Хіберікс (Бельгія)', '{"price":0}', NOW(), NOW()),
-(UUID(), @cat18, 'Варілрикс (Бельгія)', '{"price":2500}', NOW(), NOW()),
-(UUID(), @cat18, 'Ваксігрип (Франція)', '{"price":0, "customPriceString":"1000* (від 2 доз - 950; від 3 доз - 900; дітям до 9 років при першій вакцинації - по 900)"}', NOW(), NOW()),
-(UUID(), @cat18, 'Джи Сі Флю (Корея)', '{"price":0, "customPriceString":"850* (від 2 доз - 800; від 3 доз - 750; дітям до 9 років при першій вакцинації - по 700)"}', NOW(), NOW());
+(UUID(), @cat18, 'Гексаксим АаКДП+ІПВ+ХІБ+гепВ (Франція) (правець, дифтерія, кашлюк, поліоміеліт, гепатит В, гемофільна інфекція) до 2х років', NULL, '{"price":2400}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Інфанрикс Гекса АаКДП+ІПВ+ХІБ+гепВ (Бельгія) (правець, дифтерія, кашлюк, поліоміеліт, гепатит В, гемофільна інфекція) до 36 місяців', NULL, '{"price":2600}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Пентаксим АаКДП+ІПВ+ХІБ (Франція) (правець, дифтерія, кашлюк, поліоміеліт, гемофільна інфекція) до 4 років 11 міс', NULL, '{"price":2200}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Інфанрикс ІПВ ХІБ АаКДП+ІПВ+ХІБ  (Бельгія) (правець, дифтерія, кашлюк, поліоміеліт, гемофільна інфекція) до 3х років', NULL, '{"price":2400}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Бустрикс Поліо АаКДП+ІПВ (Бельгія) (правець, дифтерія, кашлюк + поліоміеліт) (з 3 років)', NULL, '{"price":1900}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Тетраксим АаКДП+ІПВ (Франція) (правець, дифтерія, кашлюк + поліоміеліт) до 6 років 11 місяц', NULL, '{"price":2000}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Інфанрикс ІПВ АаКДП+ІПВ (Бельгія) (правець, дифтерія, кашлюк + поліоміеліт) до 13 років', NULL, '{"price":2100}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Бустрикс (Бельгія) (правець, дифтерія, кашлюк)', NULL, '{"price":1700}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Інфанрикс АаКДП (Бельгія) (правець, дифтерія, кашлюк) до 6 років 11 місяців', NULL, '{"price":1700}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Пріорикс (Бельгія) (кір, паротит, краснуха)', NULL, '{"price":1700}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'М-М-РВАКСПРО (США) (кір, паротит, краснуха)', NULL, '{"price":0}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Ротарикс (Бельгія) (3 штами / 2 дози до 5,5 місяців)', NULL, '{"price":1800}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Ротатек (США)  (5 штамів / 3 дози до 8 місяців)', NULL, '{"price":2000}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Менактра (США) (менінгокок)', NULL, '{"price":0}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Німенрикс (Бельгія) (менінгокок)', NULL, '{"price":2700}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Бексеро () (менінгокок В)', NULL, '{"price":4750}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Синфлорикс (Бельгія) (пневмокок 10 серотипів)', NULL, '{"price":2500}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Превенар 13 (Великобританія) (пневмокок 13 серотипів)', NULL, '{"price":3700}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Ваксньюванс (Нідерланди) (пневмокок 15 серотипів)', NULL, '{"price":3650}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Церварикс (Бельгія) (папіломавірус 16 і 18 типів)', NULL, '{"price":2500}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Гардасил (США) (папіломавірус 6, 11, 16 і 18 типів)', NULL, '{"price":6100}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Гардасил 9', NULL, '{"price":6800}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Хаврикс 720 (Бельгія) (гепатит А)', NULL, '{"price":1700}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Хаврикс 1440(Бельгія) (гепатит А)', NULL, '{"price":1800}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Твінрикс (Бельгія) (гепатит А+В)', NULL, '{"price":2400}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Енджерикс дитячий 0,5мл', NULL, '{"price":1100}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Енджерикс дорослий 1мл', NULL, '{"price":1250}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Хіберікс (Бельгія) (гемофільна інфекція)', NULL, '{"price":0}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Варілрикс (Бельгія) (вітряна віспа)', NULL, '{"price":2500}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Варівакс (Нідерланди) (вітряна віспа)', NULL, '{"price":4000}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Ваксігрип (Франція)', NULL, '{"price":0}', NULL, NOW(), NOW()),
+(UUID(), @cat18, 'Джи Сі Флю (Корея)', NULL, '{"price":950}', NULL, NOW(), NOW());
 
 -- Category 19: Послуга вакцинації вакциєю, придбаною особисто
 SET @cat19 = UUID();
 INSERT INTO service_categories (id, name, iconUrl, created_at, updated_at)
 VALUES (@cat19, 'Послуга вакцинації вакциєю, придбаною особисто', 'ic_syringe.svg', NOW(), NOW());
 
-INSERT INTO services (id, category_id, title, price, created_at, updated_at)
+INSERT INTO services (id, category_id, title, short_description, price, duration, created_at, updated_at)
 VALUES 
-(UUID(), @cat19, 'Послуга вакцинації вакциєю, придбаною особисто', '{"price":0, "customPriceString":"Вартість консультації лікаря + 100 грн введення внутрішньом''язової ін''єкції. За наявності чеку з аптеки та сертифікату на вакцину, а також за умови доставки вакцини з виконанням вимог холодового ланцюга."}', NOW(), NOW());
+(UUID(), @cat19, 'Послуга вакцинації вакциною, придбаною особисто', NULL, '{"price":0, "customPriceString":"Вартість консультації лікаря + 100 грн введення внутрішньом''язової ін''єкції.За наявності чеку з аптеки та сертифікату на вакцину, а також за умови доставки вакцини з виконанням вимог холодового ланцюга."}', NULL, NOW(), NOW());
 
 -- Insert Consultations
 INSERT INTO consultations (
