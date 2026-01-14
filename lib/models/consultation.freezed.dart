@@ -28,6 +28,8 @@ mixin _$Consultation {
   String? get duration => throw _privateConstructorUsedError;
   Map<String, dynamic>? get question => throw _privateConstructorUsedError;
   bool get featured => throw _privateConstructorUsedError;
+  String? get bookingId => throw _privateConstructorUsedError;
+  String? get paymentUrl => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
   String? get createdBy => throw _privateConstructorUsedError;
@@ -58,6 +60,8 @@ abstract class $ConsultationCopyWith<$Res> {
       String? duration,
       Map<String, dynamic>? question,
       bool featured,
+      String? bookingId,
+      String? paymentUrl,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
@@ -87,6 +91,8 @@ class _$ConsultationCopyWithImpl<$Res, $Val extends Consultation>
     Object? duration = freezed,
     Object? question = freezed,
     Object? featured = null,
+    Object? bookingId = freezed,
+    Object? paymentUrl = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? createdBy = freezed,
@@ -125,6 +131,14 @@ class _$ConsultationCopyWithImpl<$Res, $Val extends Consultation>
           ? _value.featured
           : featured // ignore: cast_nullable_to_non_nullable
               as bool,
+      bookingId: freezed == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      paymentUrl: freezed == paymentUrl
+          ? _value.paymentUrl
+          : paymentUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -162,6 +176,8 @@ abstract class _$$ConsultationImplCopyWith<$Res>
       String? duration,
       Map<String, dynamic>? question,
       bool featured,
+      String? bookingId,
+      String? paymentUrl,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
@@ -189,6 +205,8 @@ class __$$ConsultationImplCopyWithImpl<$Res>
     Object? duration = freezed,
     Object? question = freezed,
     Object? featured = null,
+    Object? bookingId = freezed,
+    Object? paymentUrl = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? createdBy = freezed,
@@ -227,6 +245,14 @@ class __$$ConsultationImplCopyWithImpl<$Res>
           ? _value.featured
           : featured // ignore: cast_nullable_to_non_nullable
               as bool,
+      bookingId: freezed == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      paymentUrl: freezed == paymentUrl
+          ? _value.paymentUrl
+          : paymentUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -259,6 +285,8 @@ class _$ConsultationImpl implements _Consultation {
       this.duration,
       final Map<String, dynamic>? question,
       this.featured = false,
+      this.bookingId,
+      this.paymentUrl,
       required this.createdAt,
       required this.updatedAt,
       this.createdBy,
@@ -294,6 +322,10 @@ class _$ConsultationImpl implements _Consultation {
   @JsonKey()
   final bool featured;
   @override
+  final String? bookingId;
+  @override
+  final String? paymentUrl;
+  @override
   final DateTime createdAt;
   @override
   final DateTime updatedAt;
@@ -304,7 +336,7 @@ class _$ConsultationImpl implements _Consultation {
 
   @override
   String toString() {
-    return 'Consultation(id: $id, title: $title, shortDescription: $shortDescription, description: $description, price: $price, duration: $duration, question: $question, featured: $featured, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy)';
+    return 'Consultation(id: $id, title: $title, shortDescription: $shortDescription, description: $description, price: $price, duration: $duration, question: $question, featured: $featured, bookingId: $bookingId, paymentUrl: $paymentUrl, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy)';
   }
 
   @override
@@ -324,6 +356,10 @@ class _$ConsultationImpl implements _Consultation {
             const DeepCollectionEquality().equals(other._question, _question) &&
             (identical(other.featured, featured) ||
                 other.featured == featured) &&
+            (identical(other.bookingId, bookingId) ||
+                other.bookingId == bookingId) &&
+            (identical(other.paymentUrl, paymentUrl) ||
+                other.paymentUrl == paymentUrl) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -346,6 +382,8 @@ class _$ConsultationImpl implements _Consultation {
       duration,
       const DeepCollectionEquality().hash(_question),
       featured,
+      bookingId,
+      paymentUrl,
       createdAt,
       updatedAt,
       createdBy,
@@ -377,6 +415,8 @@ abstract class _Consultation implements Consultation {
       final String? duration,
       final Map<String, dynamic>? question,
       final bool featured,
+      final String? bookingId,
+      final String? paymentUrl,
       required final DateTime createdAt,
       required final DateTime updatedAt,
       final String? createdBy,
@@ -401,6 +441,10 @@ abstract class _Consultation implements Consultation {
   Map<String, dynamic>? get question;
   @override
   bool get featured;
+  @override
+  String? get bookingId;
+  @override
+  String? get paymentUrl;
   @override
   DateTime get createdAt;
   @override

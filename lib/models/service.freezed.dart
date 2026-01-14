@@ -29,6 +29,7 @@ mixin _$Service {
   ServicePrice get price => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
   String get categoryId => throw _privateConstructorUsedError;
+  String? get bookingId => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
   String? get createdBy => throw _privateConstructorUsedError;
@@ -58,6 +59,7 @@ abstract class $ServiceCopyWith<$Res> {
       ServicePrice price,
       int? duration,
       String categoryId,
+      String? bookingId,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
@@ -90,6 +92,7 @@ class _$ServiceCopyWithImpl<$Res, $Val extends Service>
     Object? price = null,
     Object? duration = freezed,
     Object? categoryId = null,
+    Object? bookingId = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? createdBy = freezed,
@@ -132,6 +135,10 @@ class _$ServiceCopyWithImpl<$Res, $Val extends Service>
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as String,
+      bookingId: freezed == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -179,6 +186,7 @@ abstract class _$$ServiceImplCopyWith<$Res> implements $ServiceCopyWith<$Res> {
       ServicePrice price,
       int? duration,
       String categoryId,
+      String? bookingId,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
@@ -210,6 +218,7 @@ class __$$ServiceImplCopyWithImpl<$Res>
     Object? price = null,
     Object? duration = freezed,
     Object? categoryId = null,
+    Object? bookingId = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? createdBy = freezed,
@@ -252,6 +261,10 @@ class __$$ServiceImplCopyWithImpl<$Res>
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as String,
+      bookingId: freezed == bookingId
+          ? _value.bookingId
+          : bookingId // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -285,6 +298,7 @@ class _$ServiceImpl implements _Service {
       required this.price,
       this.duration,
       required this.categoryId,
+      this.bookingId,
       required this.createdAt,
       required this.updatedAt,
       this.createdBy,
@@ -312,6 +326,8 @@ class _$ServiceImpl implements _Service {
   @override
   final String categoryId;
   @override
+  final String? bookingId;
+  @override
   final DateTime createdAt;
   @override
   final DateTime updatedAt;
@@ -322,7 +338,7 @@ class _$ServiceImpl implements _Service {
 
   @override
   String toString() {
-    return 'Service(id: $id, title: $title, shortDescription: $shortDescription, longDescription: $longDescription, image: $image, icon: $icon, price: $price, duration: $duration, categoryId: $categoryId, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy)';
+    return 'Service(id: $id, title: $title, shortDescription: $shortDescription, longDescription: $longDescription, image: $image, icon: $icon, price: $price, duration: $duration, categoryId: $categoryId, bookingId: $bookingId, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy)';
   }
 
   @override
@@ -343,6 +359,8 @@ class _$ServiceImpl implements _Service {
                 other.duration == duration) &&
             (identical(other.categoryId, categoryId) ||
                 other.categoryId == categoryId) &&
+            (identical(other.bookingId, bookingId) ||
+                other.bookingId == bookingId) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -366,6 +384,7 @@ class _$ServiceImpl implements _Service {
       price,
       duration,
       categoryId,
+      bookingId,
       createdAt,
       updatedAt,
       createdBy,
@@ -398,6 +417,7 @@ abstract class _Service implements Service {
       required final ServicePrice price,
       final int? duration,
       required final String categoryId,
+      final String? bookingId,
       required final DateTime createdAt,
       required final DateTime updatedAt,
       final String? createdBy,
@@ -423,6 +443,8 @@ abstract class _Service implements Service {
   int? get duration;
   @override
   String get categoryId;
+  @override
+  String? get bookingId;
   @override
   DateTime get createdAt;
   @override
