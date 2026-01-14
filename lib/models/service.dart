@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mysql1/mysql1.dart';
 import 'package:help4kids/models/service_price.dart';
 
 part 'service.freezed.dart';
@@ -37,6 +38,12 @@ class Service with _$Service {
           : Map<String, dynamic>.from(jsonDecode(rawPrice) as Map);
     } else if (rawPrice is Map) {
       priceMap = Map<String, dynamic>.from(rawPrice);
+    } else if (rawPrice is Blob) {
+      // Handle Blob type (JSON columns sometimes come back as Blob)
+      final priceStr = rawPrice.toString();
+      priceMap = priceStr.isEmpty
+          ? <String, dynamic>{}
+          : Map<String, dynamic>.from(jsonDecode(priceStr) as Map);
     } else {
       priceMap = <String, dynamic>{};
     }
