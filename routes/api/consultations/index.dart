@@ -47,10 +47,16 @@ Future<Response> onRequest(RequestContext context) async {
           );
         }
 
+        // Optional fields
+        final bookingId = body['bookingId'] as String?;
+        final paymentUrl = body['paymentUrl'] as String?;
+
         final consultation = await ConsultationService.createConsultation(
           title: title.trim(),
           shortDescription: shortDescription.trim(),
           price: price.toDouble(),
+          bookingId: bookingId?.trim(),
+          paymentUrl: paymentUrl?.trim(),
         );
         return ResponseHelpers.success(consultation.toJson());
       } catch (e) {

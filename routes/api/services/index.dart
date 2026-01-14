@@ -83,6 +83,7 @@ Future<Response> onRequest(RequestContext context) async {
         final longDescription = body['longDescription'] as String?;
         final image = body['image'] as String?;
         final duration = body['duration'] as int?;
+        final bookingId = body['bookingId'] as String?;
 
         if (duration != null && !Validation.isPositive(duration)) {
           return ResponseHelpers.error(
@@ -107,6 +108,7 @@ Future<Response> onRequest(RequestContext context) async {
           ),
           duration: duration,
           categoryId: categoryId,
+          bookingId: bookingId?.trim(),
         );
         return ResponseHelpers.success(service.toJson());
       } catch (e) {

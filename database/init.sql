@@ -77,6 +77,7 @@ CREATE TABLE services (
   duration INT,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   ordering INT NOT NULL DEFAULT 0,
+  booking_id VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(36),
@@ -114,6 +115,8 @@ CREATE TABLE consultations (
   ordering INT NOT NULL DEFAULT 0,
   duration VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   question JSON,
+  booking_id VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  payment_url VARCHAR(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   created_by VARCHAR(36),
@@ -649,6 +652,7 @@ INSERT INTO consultations (
   ordering,
   duration,
   question,
+  payment_url,
   created_at,
   updated_at
 )
@@ -663,6 +667,7 @@ VALUES
   0,
   '1 година',
   '["Що робити щоб малюк краще спав?", "Як розділити грудне годування та засинання?", "Як навчити дитину спокійно засинати з мінімальною вашою допомогою, або самостійно?", "Як перестати носити на руках/колисати/гойдати/стрибати/годувати для того, щоб дитина заснула?", "Як перестати годувати вночі?", "Як перевести дитину спати в окреме ліжко?", "Як налагодити правильний режим?"]',
+  'https://secure.wayforpay.com/button/b60f66fd4231b',
   NOW(),
   NOW()
 ),
@@ -671,11 +676,12 @@ VALUES
   'Консультація з годування',
   NULL,
   'Якщо ви маєте питання або проблеми з годуванням дитини, або хочете більш детально дізнатись про розвиток – запишіться на онлайн консультацію. Ви отримаєте відповіді на питання:',
-  1000,
+  1200,
   FALSE,
   0,
   '1 година',
   '["Як правильно та безпечно ввести прикорм?", "Як покращити апетит дитині?", "Як привчити дитину до здорового харчування?", "Що робити, якщо ваша дитина малоїжка?", "Як зрозуміти, чи нормально розвинута ваша дитина?"]',
+  'https://secure.wayforpay.com/button/bcd819561e16e',
   NOW(),
   NOW()
 ),
@@ -684,11 +690,12 @@ VALUES
   'Онлайн консультація',
   NULL,
   'Якщо ваша дитина захворіла і ви не маєте можливості звернутись до лікаря, замовте онлайн-консультацію і ви отримаєте відповіді на питання:',
-  600,
+  700,
   FALSE,
   0,
   '30 хвилин',
   '["Що робити при гострому захворюванні?", "Як знизити температуру?", "Що робити, коли в дитини блювання та пронос?", "Що означають результати аналізів вашої дитини?", "До якого спеціаліста звернутись з вашою проблемою?"]',
+  'https://secure.wayforpay.com/button/b8b749ca79951',
   NOW(),
   NOW()
 );

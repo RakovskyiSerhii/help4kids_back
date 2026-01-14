@@ -34,19 +34,23 @@ class ConsultationService {
     required String title,
     required String shortDescription,
     required double price,
+    String? bookingId,
+    String? paymentUrl,
   }) async {
     final conn = await MySQLConnection.openConnection();
     try {
       final consultationId = Uuid().v4();
       await conn.query(
-        'INSERT INTO consultations (id, title, short_description, price, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())',
-        [consultationId, title, shortDescription, price],
+        'INSERT INTO consultations (id, title, short_description, price, booking_id, payment_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())',
+        [consultationId, title, shortDescription, price, bookingId, paymentUrl],
       );
       return Consultation(
         id: consultationId,
         title: title,
         shortDescription: shortDescription,
         price: price,
+        bookingId: bookingId,
+        paymentUrl: paymentUrl,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         createdBy: null,
@@ -75,6 +79,14 @@ class ConsultationService {
       if (body.containsKey('price')) {
         updates.add('price = ?');
         params.add(body['price']);
+      }
+      if (body.containsKey('bookingId')) {
+        updates.add('booking_id = ?');
+        params.add(body['bookingId']);
+      }
+      if (body.containsKey('paymentUrl')) {
+        updates.add('payment_url = ?');
+        params.add(body['paymentUrl']);
       }
 
       if (updates.isEmpty) return false;

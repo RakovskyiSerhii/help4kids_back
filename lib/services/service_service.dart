@@ -44,6 +44,7 @@ class ServiceService {
     required ServicePrice price,
     int? duration,
     required String categoryId,
+    String? bookingId,
   }) async {
     final conn = await MySQLConnection.openConnection();
     try {
@@ -53,10 +54,10 @@ class ServiceService {
       await conn.query(
         '''
         INSERT INTO services 
-          (id, title, short_description, long_description, image, icon, price, duration, category_id, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+          (id, title, short_description, long_description, image, icon, price, duration, category_id, booking_id, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ''',
-        [serviceId, title, shortDescription, longDescription, image, icon, priceJson, duration, categoryId],
+        [serviceId, title, shortDescription, longDescription, image, icon, priceJson, duration, categoryId, bookingId],
       );
       return Service(
         id: serviceId,
@@ -68,6 +69,7 @@ class ServiceService {
         price: price,
         duration: duration,
         categoryId: categoryId,
+        bookingId: bookingId,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         createdBy: null,
@@ -121,6 +123,10 @@ class ServiceService {
       if (body.containsKey('categoryId')) {
         updates.add('category_id = ?');
         params.add(body['categoryId']);
+      }
+      if (body.containsKey('bookingId')) {
+        updates.add('booking_id = ?');
+        params.add(body['bookingId']);
       }
       if (updates.isEmpty) return false;
 
