@@ -10,7 +10,7 @@ class LandingService {
     return await DbHelper.withConnection((conn) async {
       // Execute all queries in parallel for better performance
       final results = await Future.wait([
-        conn.query("SELECT id, name, description, iconUrl FROM service_categories"),
+        conn.query("SELECT id, name, description, iconUrl FROM service_categories WHERE featured = true"),
         conn.query("SELECT id, name, content, photo_url, featured, created_at, updated_at FROM staff WHERE featured = true"),
         conn.query("SELECT id, title, short_description, price, created_at, updated_at FROM consultations"),
         conn.query("SELECT id, title, content, category_id, created_at, updated_at FROM articles"),
