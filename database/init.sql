@@ -700,8 +700,8 @@ VALUES
   NOW()
 );
 
--- Update all services' updated_at to today's date
-UPDATE services SET updated_at = CURDATE();
+-- Update all services' updated_at to 14.01.2026
+UPDATE services SET updated_at = '2026-01-14';
 
 -- ============================================
 -- SCRIPT COMPLETED
