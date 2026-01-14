@@ -700,6 +700,9 @@ VALUES
   NOW()
 );
 
+-- Update all services' updated_at to current timestamp
+UPDATE services SET updated_at = NOW();
+
 -- ============================================
 -- SCRIPT COMPLETED
 -- ============================================
