@@ -46,11 +46,16 @@ if [ ! -f "$INIT_SQL" ]; then
     exit 1
 fi
 
-echo -e "${YELLOW}Step 1: Stopping API server...${NC}"
+echo -e "${YELLOW}Step 1: Pulling latest changes from git...${NC}"
+cd "$BACKEND_DIR"
+git pull origin main || git pull origin master || echo -e "${YELLOW}Warning: Could not pull from git (continuing anyway)${NC}"
+echo -e "${GREEN}✓ Code updated${NC}"
+
+echo -e "${YELLOW}Step 2: Stopping API server...${NC}"
 systemctl stop "$SERVICE_NAME" || echo -e "${YELLOW}Warning: Service was not running${NC}"
 sleep 2
 
-echo -e "${YELLOW}Step 2: Dropping and recreating database...${NC}"
+echo -e "${YELLOW}Step 3: Dropping and recreating database...${NC}"
 mysql -u "$DB_USER" -p"$DB_PASSWORD" < "$INIT_SQL"
 
 if [ $? -eq 0 ]; then
@@ -60,7 +65,12 @@ else
     exit 1
 fi
 
-echo -e "${YELLOW}Step 3: Rebuilding the server...${NC}"
+echo -e "${YELLOW}Step 4: Installing dependencies...${NC}"
+cd "$BACKEND_DIR"
+dart pub get
+echo -e "${GREEN}✓ Dependencies installed${NC}"
+
+echo -e "${YELLOW}Step 5: Rebuilding the server...${NC}"
 cd "$BACKEND_DIR"
 
 # Check if dart_frog is available
@@ -85,7 +95,7 @@ fi
 
 echo -e "${GREEN}✓ Server built successfully${NC}"
 
-echo -e "${YELLOW}Step 4: Starting API server...${NC}"
+echo -e "${YELLOW}Step 6: Starting API server...${NC}"
 systemctl start "$SERVICE_NAME"
 sleep 3
 
