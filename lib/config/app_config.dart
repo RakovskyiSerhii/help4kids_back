@@ -32,6 +32,18 @@ class AppConfig {
   // Server configuration
   static int get serverPort => int.tryParse(Platform.environment['PORT'] ?? '8080') ?? 8080;
 
+  // WayForPay configuration
+  static String get wayforpayMerchantAccount => 
+      Platform.environment['WAYFORPAY_MERCHANT_ACCOUNT'] ?? '';
+  static String get wayforpaySecretKey => 
+      Platform.environment['WAYFORPAY_SECRET_KEY'] ?? '';
+  static String get wayforpayApiUrl => 
+      Platform.environment['WAYFORPAY_API_URL'] ?? 'https://secure.wayforpay.com/pay';
+  static String get wayforpayServiceUrl => 
+      Platform.environment['WAYFORPAY_SERVICE_URL'] ?? '';
+  static String get wayforpayMerchantDomainName => 
+      Platform.environment['WAYFORPAY_MERCHANT_DOMAIN_NAME'] ?? 'help4kids.com';
+
   // For testing only
   static void setTestConfig({String? jwtSecret, String? jwtIssuer}) {
     _jwtSecretOverride = jwtSecret;

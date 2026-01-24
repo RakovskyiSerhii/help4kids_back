@@ -18,6 +18,7 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       createdBy: json['createdBy'] as String?,
       updatedBy: json['updatedBy'] as String?,
+      phone: json['phone'] as String?,
     );
 
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
@@ -33,4 +34,5 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'updatedAt': instance.updatedAt.toIso8601String(),
       'createdBy': instance.createdBy,
       'updatedBy': instance.updatedBy,
+      'phone': instance.phone,
     };

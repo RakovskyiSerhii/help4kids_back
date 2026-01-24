@@ -17,6 +17,7 @@ class User with _$User {
     required DateTime updatedAt,
     String? createdBy,
     String? updatedBy,
+    String? phone,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
