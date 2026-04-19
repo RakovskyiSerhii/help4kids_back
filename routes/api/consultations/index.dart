@@ -34,10 +34,10 @@ Future<Response> onRequest(RequestContext context) async {
           );
         }
 
-        // Validate fields
-        if (!Validation.isNotEmpty(title)) {
+        // Enhanced validation per frontend requirements
+        if (title.trim().length < 3 || title.trim().length > 200) {
           return ResponseHelpers.error(
-            ApiErrors.validationError('Title cannot be empty'),
+            ApiErrors.validationError('Title must be between 3 and 200 characters'),
           );
         }
 
@@ -51,12 +51,23 @@ Future<Response> onRequest(RequestContext context) async {
         final bookingId = body['bookingId'] as String?;
         final paymentUrl = body['paymentUrl'] as String?;
 
+        final payload = context.read<JwtPayload>();
+        final description = body['description'] as String?;
+        final duration = body['duration'] as String?;
+        final question = body['question'] as Map<String, dynamic>?;
+        final featured = body['featured'] as bool? ?? false;
+        
         final consultation = await ConsultationService.createConsultation(
           title: title.trim(),
           shortDescription: shortDescription.trim(),
+          description: description?.trim(),
           price: price.toDouble(),
+          duration: duration?.trim(),
+          question: question,
+          featured: featured,
           bookingId: bookingId?.trim(),
           paymentUrl: paymentUrl?.trim(),
+          createdBy: payload.id,
         );
         return ResponseHelpers.success(consultation.toJson());
       } catch (e) {

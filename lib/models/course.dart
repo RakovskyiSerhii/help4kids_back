@@ -15,6 +15,7 @@ class Course with _$Course {
     required double price,
     int? duration,
     required String contentUrl,
+    @Default(false) bool featured,
     required DateTime createdAt,
     required DateTime updatedAt,
     String? createdBy,

@@ -19,6 +19,7 @@ class CourseService {
           price: double.tryParse(fields['price']?.toString() ?? '0.0') ?? 0.0,
           duration: int.tryParse(fields['duration']?.toString() ?? ''),
           contentUrl: fields['content_url']?.toString() ?? '',
+          featured: _parseBool(fields['featured']),
           createdAt: DateTime.parse(fields['created_at'].toString()),
           updatedAt: DateTime.parse(fields['updated_at'].toString()),
           createdBy: fields['created_by']?.toString(),
@@ -68,6 +69,8 @@ class CourseService {
     required double price,
     int? duration,
     required String contentUrl,
+    bool featured = false,
+    String? createdBy,
   }) async {
     final conn = await MySQLConnection.openConnection();
     try {
@@ -75,10 +78,10 @@ class CourseService {
       await conn.query(
         '''
         INSERT INTO courses 
-          (id, title, short_description, long_description, image, icon, price, duration, content_url, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+          (id, title, short_description, long_description, image, icon, price, duration, content_url, featured, created_by, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
         ''',
-        [courseId, title, shortDescription, longDescription, image, icon, price, duration, contentUrl],
+        [courseId, title, shortDescription, longDescription, image, icon, price, duration, contentUrl, featured, createdBy],
       );
       return Course(
         id: courseId,
@@ -90,9 +93,10 @@ class CourseService {
         price: price,
         duration: duration,
         contentUrl: contentUrl,
+        featured: featured,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        createdBy: null,
+        createdBy: createdBy,
         updatedBy: null,
       );
     } finally {
@@ -138,6 +142,10 @@ class CourseService {
         updates.add('content_url = ?');
         params.add(body['contentUrl']);
       }
+      if (body.containsKey('featured')) {
+        updates.add('featured = ?');
+        params.add(body['featured']);
+      }
 
       if (updates.isEmpty) return false;
       updates.add('updated_at = NOW()');
@@ -150,9 +158,31 @@ class CourseService {
     }
   }
 
+  /// Check if course has active orders
+  static Future<bool> hasActiveOrders(String courseId) async {
+    final conn = await MySQLConnection.openConnection();
+    try {
+      final results = await conn.query(
+        "SELECT COUNT(*) as count FROM orders WHERE service_id = ? AND service_type = 'course'",
+        [courseId],
+      );
+      if (results.isEmpty) return false;
+      final count = results.first.fields['count'] as int? ?? 0;
+      return count > 0;
+    } finally {
+      await conn.close();
+    }
+  }
+
   static Future<bool> deleteCourse(String courseId) async {
     final conn = await MySQLConnection.openConnection();
     try {
+      // Check for active orders first
+      final hasOrders = await hasActiveOrders(courseId);
+      if (hasOrders) {
+        throw Exception('Course has active orders and cannot be deleted');
+      }
+      
       final result = await conn.query(
         'DELETE FROM courses WHERE id = ?',
         [courseId],
@@ -186,6 +216,7 @@ class CourseService {
           price: double.tryParse(fields['price']?.toString() ?? '0.0') ?? 0.0,
           duration: int.tryParse(fields['duration']?.toString() ?? ''),
           contentUrl: fields['content_url']?.toString() ?? '',
+          featured: _parseBool(fields['featured']),
           createdAt: DateTime.parse(fields['created_at'].toString()),
           updatedAt: DateTime.parse(fields['updated_at'].toString()),
           createdBy: fields['created_by']?.toString(),
@@ -195,5 +226,14 @@ class CourseService {
     } finally {
       await conn.close();
     }
+  }
+
+  static bool _parseBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is int) return value == 1;
+    if (value is String) {
+      return value.toLowerCase() == 'true' || value == '1';
+    }
+    return false;
   }
 }

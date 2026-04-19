@@ -36,16 +36,16 @@ Future<Response> onRequest(RequestContext context) async {
           );
         }
 
-        // Validate fields
-        if (!Validation.isNotEmpty(title)) {
+        // Enhanced validation per frontend requirements
+        if (title.trim().length < 3 || title.trim().length > 200) {
           return ResponseHelpers.error(
-            ApiErrors.validationError('Title cannot be empty'),
+            ApiErrors.validationError('Title must be between 3 and 200 characters'),
           );
         }
 
-        if (!Validation.isNotEmpty(content)) {
+        if (content.trim().length < 50) {
           return ResponseHelpers.error(
-            ApiErrors.validationError('Content cannot be empty'),
+            ApiErrors.validationError('Content must be at least 50 characters'),
           );
         }
 
