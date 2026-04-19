@@ -54,19 +54,83 @@ class StaffService {
   }
 
   // Create a new staff member
-  static Future<bool> createStaff({
+  static Future<Staff> createStaff({
     required String name,
     String? content,
+    String? photoUrl,
     bool featured = false,
   }) async {
     final conn = await MySQLConnection.openConnection();
     try {
       final id = Uuid().v4();
       await conn.query(
-        'INSERT INTO staff (id, name, content, featured, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())',
-        [id, name, content ?? '', featured ? 1 : 0],
+        'INSERT INTO staff (id, name, content, photo_url, featured, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())',
+        [id, name, content, photoUrl, featured ? 1 : 0],
       );
-      return true;
+      return Staff(
+        id: id,
+        name: name,
+        content: content,
+        photoUrl: photoUrl,
+        featured: featured,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+    } finally {
+      await conn.close();
+    }
+  }
+
+  // Update a staff member
+  static Future<bool> updateStaff(String staffId, Map<String, dynamic> updates) async {
+    final conn = await MySQLConnection.openConnection();
+    try {
+      final updateFields = <String>[];
+      final params = <Object?>[];
+
+      if (updates.containsKey('name')) {
+        updateFields.add('name = ?');
+        params.add(updates['name']);
+      }
+      if (updates.containsKey('content')) {
+        updateFields.add('content = ?');
+        params.add(updates['content']);
+      }
+      if (updates.containsKey('photoUrl')) {
+        updateFields.add('photo_url = ?');
+        params.add(updates['photoUrl']);
+      }
+      if (updates.containsKey('featured')) {
+        updateFields.add('featured = ?');
+        params.add((updates['featured'] as bool) ? 1 : 0);
+      }
+      if (updates.containsKey('ordering')) {
+        updateFields.add('ordering = ?');
+        params.add(updates['ordering']);
+      }
+
+      if (updateFields.isEmpty) return false;
+
+      updateFields.add('updated_at = NOW()');
+      params.add(staffId);
+
+      final query = 'UPDATE staff SET ${updateFields.join(", ")} WHERE id = ?';
+      final result = await conn.query(query, params);
+      return result.affectedRows! > 0;
+    } finally {
+      await conn.close();
+    }
+  }
+
+  // Delete a staff member
+  static Future<bool> deleteStaff(String staffId) async {
+    final conn = await MySQLConnection.openConnection();
+    try {
+      final result = await conn.query(
+        'DELETE FROM staff WHERE id = ?',
+        [staffId],
+      );
+      return result.affectedRows! > 0;
     } finally {
       await conn.close();
     }

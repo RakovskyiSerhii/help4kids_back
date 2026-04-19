@@ -50,6 +50,7 @@ class UserService {
         createdBy: fields['created_by']?.toString(),
         updatedBy: fields['updated_by']?.toString(),
         isVerified: _parseBool(fields['is_verified']),
+        phone: fields['phone']?.toString(),
       );
     } finally {
       await conn.close();
@@ -85,6 +86,10 @@ class UserService {
       if (body.containsKey('lastName')) {
         updates.add('last_name = ?');
         params.add(body['lastName']);
+      }
+      if (body.containsKey('phone')) {
+        updates.add('phone = ?');
+        params.add(body['phone']);
       }
       if (body.containsKey('roleId')) {
         updates.add('role_id = ?');

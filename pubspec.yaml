@@ -16,6 +16,7 @@ dependencies:
   uuid: ^3.0.4
 #  use this git https://github.com/Marc-R2/mysql1_dart
   mysql1: ^0.20.0
+  crypto: ^3.0.3
 
 
 dev_dependencies:

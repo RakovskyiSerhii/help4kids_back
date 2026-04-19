@@ -29,6 +29,7 @@ mixin _$Course {
   double get price => throw _privateConstructorUsedError;
   int? get duration => throw _privateConstructorUsedError;
   String get contentUrl => throw _privateConstructorUsedError;
+  bool get featured => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
   String? get createdBy => throw _privateConstructorUsedError;
@@ -58,6 +59,7 @@ abstract class $CourseCopyWith<$Res> {
       double price,
       int? duration,
       String contentUrl,
+      bool featured,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
@@ -88,6 +90,7 @@ class _$CourseCopyWithImpl<$Res, $Val extends Course>
     Object? price = null,
     Object? duration = freezed,
     Object? contentUrl = null,
+    Object? featured = null,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? createdBy = freezed,
@@ -130,6 +133,10 @@ class _$CourseCopyWithImpl<$Res, $Val extends Course>
           ? _value.contentUrl
           : contentUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      featured: null == featured
+          ? _value.featured
+          : featured // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -167,6 +174,7 @@ abstract class _$$CourseImplCopyWith<$Res> implements $CourseCopyWith<$Res> {
       double price,
       int? duration,
       String contentUrl,
+      bool featured,
       DateTime createdAt,
       DateTime updatedAt,
       String? createdBy,
@@ -195,6 +203,7 @@ class __$$CourseImplCopyWithImpl<$Res>
     Object? price = null,
     Object? duration = freezed,
     Object? contentUrl = null,
+    Object? featured = null,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? createdBy = freezed,
@@ -237,6 +246,10 @@ class __$$CourseImplCopyWithImpl<$Res>
           ? _value.contentUrl
           : contentUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      featured: null == featured
+          ? _value.featured
+          : featured // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -270,6 +283,7 @@ class _$CourseImpl implements _Course {
       required this.price,
       this.duration,
       required this.contentUrl,
+      this.featured = false,
       required this.createdAt,
       required this.updatedAt,
       this.createdBy,
@@ -297,6 +311,9 @@ class _$CourseImpl implements _Course {
   @override
   final String contentUrl;
   @override
+  @JsonKey()
+  final bool featured;
+  @override
   final DateTime createdAt;
   @override
   final DateTime updatedAt;
@@ -307,7 +324,7 @@ class _$CourseImpl implements _Course {
 
   @override
   String toString() {
-    return 'Course(id: $id, title: $title, shortDescription: $shortDescription, longDescription: $longDescription, image: $image, icon: $icon, price: $price, duration: $duration, contentUrl: $contentUrl, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy)';
+    return 'Course(id: $id, title: $title, shortDescription: $shortDescription, longDescription: $longDescription, image: $image, icon: $icon, price: $price, duration: $duration, contentUrl: $contentUrl, featured: $featured, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy)';
   }
 
   @override
@@ -328,6 +345,8 @@ class _$CourseImpl implements _Course {
                 other.duration == duration) &&
             (identical(other.contentUrl, contentUrl) ||
                 other.contentUrl == contentUrl) &&
+            (identical(other.featured, featured) ||
+                other.featured == featured) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -351,6 +370,7 @@ class _$CourseImpl implements _Course {
       price,
       duration,
       contentUrl,
+      featured,
       createdAt,
       updatedAt,
       createdBy,
@@ -383,6 +403,7 @@ abstract class _Course implements Course {
       required final double price,
       final int? duration,
       required final String contentUrl,
+      final bool featured,
       required final DateTime createdAt,
       required final DateTime updatedAt,
       final String? createdBy,
@@ -408,6 +429,8 @@ abstract class _Course implements Course {
   int? get duration;
   @override
   String get contentUrl;
+  @override
+  bool get featured;
   @override
   DateTime get createdAt;
   @override

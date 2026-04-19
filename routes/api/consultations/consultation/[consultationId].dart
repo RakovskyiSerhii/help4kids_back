@@ -63,13 +63,27 @@ Future<Response> onRequest(RequestContext context, String consultationId) async 
             ApiErrors.validationError('Invalid consultation ID format'),
           );
         }
+        // Check for active appointments before deletion
+        final hasAppointments = await ConsultationService.hasActiveAppointments(consultationId);
+        if (hasAppointments) {
+          return Response.json(
+            statusCode: 409,
+            body: {
+              'error': 'Conflict',
+              'message': 'Consultation has active appointments and cannot be deleted',
+              'code': 'HAS_ACTIVE_APPOINTMENTS',
+            },
+          );
+        }
+
         final success = await ConsultationService.deleteConsultation(consultationId);
         if (!success) {
           return ResponseHelpers.error(
             ApiErrors.badRequest('Deletion failed'),
           );
         }
-        return ResponseHelpers.success({'message': 'Consultation deleted successfully'});
+        // Return 204 No Content as per frontend requirements
+        return Response(statusCode: 204);
       } catch (e) {
         return ResponseHelpers.error(
           ApiErrors.internalError('Failed to delete consultation'),

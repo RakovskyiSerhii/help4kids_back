@@ -37,5 +37,14 @@ class Validation {
   static bool isNonNegative(num value) {
     return value >= 0;
   }
+
+  /// Validates phone number format (basic validation)
+  /// Accepts international format with optional + prefix
+  static bool isValidPhone(String? phone) {
+    if (phone == null || phone.isEmpty) return true; // Optional field
+    // Basic validation: allows digits, spaces, dashes, parentheses, and +
+    final phoneRegex = RegExp(r'^\+?[\d\s\-\(\)]{7,50}$');
+    return phoneRegex.hasMatch(phone);
+  }
 }
 

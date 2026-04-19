@@ -63,13 +63,27 @@ Future<Response> onRequest(RequestContext context, String courseId) async {
             ApiErrors.validationError('Invalid course ID format'),
           );
         }
+        // Check for active orders before deletion
+        final hasOrders = await CourseService.hasActiveOrders(courseId);
+        if (hasOrders) {
+          return Response.json(
+            statusCode: 409,
+            body: {
+              'error': 'Conflict',
+              'message': 'Course has active orders and cannot be deleted',
+              'code': 'HAS_ACTIVE_ORDERS',
+            },
+          );
+        }
+
         final success = await CourseService.deleteCourse(courseId);
         if (!success) {
           return ResponseHelpers.error(
             ApiErrors.badRequest('Deletion failed'),
           );
         }
-        return ResponseHelpers.success({'message': 'Course deleted successfully'});
+        // Return 204 No Content as per frontend requirements
+        return Response(statusCode: 204);
       } catch (e) {
         return ResponseHelpers.error(
           ApiErrors.internalError('Failed to delete course'),

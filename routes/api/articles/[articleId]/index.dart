@@ -69,7 +69,8 @@ Future<Response> onRequest(RequestContext context, String articleId) async {
             ApiErrors.badRequest('Deletion failed'),
           );
         }
-        return ResponseHelpers.success({'message': 'Article deleted successfully'});
+        // Return 204 No Content as per frontend requirements
+        return Response(statusCode: 204);
       } catch (e) {
         return ResponseHelpers.error(
           ApiErrors.internalError('Failed to delete article'),

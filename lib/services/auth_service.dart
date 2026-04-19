@@ -11,7 +11,7 @@ class AuthService {
       // Use parameterized query to prevent SQL injection
       // Select only needed columns for better performance
       final results = await conn.query(
-        'SELECT id, email, password_hash, first_name, last_name, role_id, is_verified, created_at, updated_at, created_by, updated_by FROM users WHERE email = ?',
+        'SELECT id, email, password_hash, first_name, last_name, role_id, is_verified, created_at, updated_at, created_by, updated_by, phone FROM users WHERE email = ?',
         [email],
       );
 
@@ -29,6 +29,7 @@ class AuthService {
         createdBy: row['created_by']?.toString(),
         updatedBy: row['updated_by']?.toString(),
         isVerified: _parseBool(row['is_verified']),
+        phone: row['phone']?.toString(),
       );
       
       if (!BCrypt.checkpw(password, user.passwordHash)) return null;
@@ -214,7 +215,7 @@ class AuthService {
     return await DbHelper.withConnection((conn) async {
       // Use parameterized query - select only needed columns
       final results = await conn.query(
-        'SELECT id, email, password_hash, first_name, last_name, role_id, is_verified, created_at, updated_at, created_by, updated_by FROM users WHERE id = ?',
+        'SELECT id, email, password_hash, first_name, last_name, role_id, is_verified, created_at, updated_at, created_by, updated_by, phone FROM users WHERE id = ?',
         [userId],
       );
       if (results.isEmpty) return null;
@@ -231,6 +232,7 @@ class AuthService {
         createdBy: row['created_by']?.toString(),
         updatedBy: row['updated_by']?.toString(),
         isVerified: _parseBool(row['is_verified']),
+        phone: row['phone']?.toString(),
       );
     });
   }
